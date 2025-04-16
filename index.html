@@ -489,12 +489,10 @@
     .about-content h2 {
       margin-bottom: 1.5rem;
     }
-    /* Updated About Text */
     .about-content p {
       margin-bottom: 1.5rem;
       color: var(--light-text);
     }
-    /* You can further elaborate in your About section to mention your ML expertise while stating you're a full stack developer. */
     .about-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -521,6 +519,57 @@
     .stat-label {
       font-size: 0.9rem;
       color: var(--light-text);
+    }
+
+    /* EDUCATION SECTION */
+    #education {
+      background: var(--card-bg);
+    }
+    .education-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .education-item {
+      background: var(--background-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      transition: var(--transition);
+    }
+    .education-item:hover {
+      transform: translateY(-5px);
+    }
+    .education-degree {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    .education-institution {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 1rem;
+    }
+    .education-details ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .education-details li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 0.6rem;
+      color: var(--light-text);
+    }
+    .education-details li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--primary-color);
+      font-weight: bold;
     }
 
     /* EXPERIENCE SECTION */
@@ -592,29 +641,6 @@
       color: var(--primary-color);
       font-weight: bold;
     }
-    /* Updated Founder & Director Section */
-    /* Refined to focus solely on your role at Engineering Hope non-profit */
-    /* Extrapolated details about building digital infrastructure for hackathons, procuring licenses, and building a technical team */
-    /* (Feel free to adjust wording further) */
-    /* The Founder & Director section is the last experience item */
-    /* For example, you might have: */
-    /*
-      <div class="experience-item fade-in">
-        <div class="experience-dot"></div>
-        <span class="experience-date">2018 - Present</span>
-        <h3 class="experience-title">Director of Technologies</h3>
-        <p class="experience-company">Engineering Hope Non-profit</p>
-        <div class="experience-description">
-          <ul>
-            <li>Built robust digital infrastructure for annual hackathons by designing scalable systems and ensuring reliable network connectivity.</li>
-            <li>Procured licenses and negotiated with vendors to secure essential tools and platforms for hackathon operations.</li>
-            <li>Assembled and led a technical advisory team to mentor and guide students throughout the hackathon, fostering innovation and collaboration.</li>
-            <li>Oversaw full stack development initiatives to integrate web, mobile, and backend systems for seamless event management.</li>
-          </ul>
-        </div>
-      </div>
-    */
-    /* Here we replace the previous Founder & Director item with the updated version: */
     .founder-section ul {
       list-style: none;
       padding-left: 0;
@@ -796,84 +822,6 @@
     }
     .certification-item {
       /* Adjust sizing as needed */
-    }
-
-    /* TESTIMONIAL SECTION */
-    #testimonials {
-      background: var(--light-gray);
-      position: relative;
-      overflow: hidden;
-    }
-    .testimonial-container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-    .testimonial-slider {
-      width: 100%;
-      position: relative;
-    }
-    .testimonial-item {
-      padding: 2.5rem;
-      border-radius: var(--border-radius);
-      background: var(--card-bg);
-      box-shadow: var(--box-shadow);
-      margin: 1rem 0;
-      position: relative;
-    }
-    .testimonial-item::before {
-      content: "“";
-      font-size: 5rem;
-      color: var(--primary-color);
-      opacity: 0.1;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-family: serif;
-    }
-    .testimonial-content {
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-      position: relative;
-      z-index: 1;
-    }
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-    }
-    .author-img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 1rem;
-    }
-    .author-info h4 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-    .author-info p {
-      font-size: 0.9rem;
-      color: var(--light-text);
-    }
-    .testimonial-dots {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 2rem;
-    }
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--light-gray);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .dot.active {
-      background: var(--primary-color);
-      transform: scale(1.3);
     }
 
     /* CONTACT SECTION */
@@ -1125,6 +1073,7 @@
         <ul class="desktop-nav">
           <li><a href="#hero">Home</a></li>
           <li><a href="#about">About</a></li>
+          <li><a href="#education">Education</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#skills">Skills</a></li>
           <li><a href="#portfolio">Projects</a></li>
@@ -1152,6 +1101,7 @@
     <ul>
       <li><a href="#hero" class="mobile-link">Home</a></li>
       <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#education" class="mobile-link">Education</a></li>
       <li><a href="#experience" class="mobile-link">Experience</a></li>
       <li><a href="#skills" class="mobile-link">Skills</a></li>
       <li><a href="#portfolio" class="mobile-link">Projects</a></li>
@@ -1172,7 +1122,6 @@
   <section id="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
-      <!-- Updated from Machine Learning Developer to Full Stack Software Developer -->
       <h5 class="hero-subtitle">Full Stack Software Developer</h5>
       <h1 class="hero-title">Hello, I'm <span>Jason Dank</span></h1>
       <p class="hero-description">I build scalable and intuitive solutions across web, mobile, and backend systems—with a strong background in full stack development and experience in machine learning integration.</p>
@@ -1199,7 +1148,7 @@
         <div class="about-content fade-in">
           <h2 class="section-title">About Me</h2>
           <p>I'm a passionate Full Stack Software Developer with a strong foundation in building scalable web, mobile, and automation solutions. I integrate cutting-edge machine learning techniques where needed while focusing on end-to-end system design.</p>
-          <p>Currently working as an Endpoint Systems Engineer at Harvard University IT, I develop tools that streamline IT processes and drive operational efficiency.</p>
+          <p>Most recently worked as an Endpoint Systems Engineer at Harvard University IT, developing tools that streamline IT processes and drive operational efficiency.</p>
           <div class="about-stats">
             <div class="stat-item">
               <div class="stat-number" id="experience-years">3+</div>
@@ -1213,6 +1162,28 @@
               <div class="stat-number" id="happy-clients">5+</div>
               <div class="stat-label">Client Collaborations</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION SECTION -->
+  <section id="education" class="section-padding">
+    <div class="container">
+      <h2 class="section-title">Education</h2>
+      <p class="section-subtitle">Academic background and achievements.</p>
+      <div class="education-container fade-in">
+        <div class="education-item">
+          <div class="education-degree">B.S. in Computer Science</div>
+          <div class="education-institution">Wentworth Institute of Technology</div>
+          <div class="education-details">
+            <ul>
+              <li>Minors: Data Science, Applied Mathematics, Business Analytics, Computer Networking</li>
+              <li>GPA: 3.7</li>
+              <li>Dean’s List every semester since Fall 2022</li>
+              <li>Expected Graduation: May 2026</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -1301,11 +1272,11 @@
           <h3 class="skill-title">Programming Languages</h3>
           <ul class="skill-list">
             <li>Python (Advanced)</li>
-            <li>Java (Intermediate)</li>
+            <li>Java (Advanced)</li>
             <li>C/C++ (Intermediate)</li>
-            <li>SQL (Advanced)</li>
-            <li>Bash/Shell Scripting</li>
-            <li>Swift (Beginner)</li>
+            <li>SQL (Intermediate)</li>
+            <li>Bash/Shell Scripting (Advanced)</li>
+            <li>Swift (Intermediate)</li>
           </ul>
         </div>
         <div class="skill-card fade-in">
@@ -1328,12 +1299,12 @@
           </div>
           <h3 class="skill-title">DevOps & IT</h3>
           <ul class="skill-list">
-            <li>Docker & Containerization</li>
             <li>PowerShell Scripting</li>
             <li>Linux System Administration</li>
             <li>SCCM & JAMF Pro</li>
-            <li>Kubernetes (Learning)</li>
+            <li>Windows System Administration</li>
             <li>Cloud Services (AWS, Azure)</li>
+            <li>Docker & Containerization</li>
           </ul>
         </div>
         <div class="skill-card fade-in">
@@ -1528,6 +1499,7 @@
           <ul>
             <li><a href="#hero">Home</a></li>
             <li><a href="#about">About</a></li>
+            <li><a href="#education">Education</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#portfolio">Projects</a></li>
@@ -1582,12 +1554,6 @@
       }
     }
 
-    // Contact Form Submission Handler (placeholder)
-    function handleSubmit(event) {
-      event.preventDefault();
-      alert('Message sent!');
-    }
-
     // Portfolio Filtering Functionality
     document.addEventListener('DOMContentLoaded', () => {
       const fadeElements = document.querySelectorAll('.fade-in');
@@ -1611,16 +1577,16 @@
           button.classList.add('active');
         });
       });
-    });
 
-    // Back to Top Button Functionality
-    const backToTop = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 300) {
-        backToTop.classList.add('show');
-      } else {
-        backToTop.classList.remove('show');
-      }
+      // Back to Top Button
+      const backToTop = document.getElementById('back-to-top');
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          backToTop.classList.add('show');
+        } else {
+          backToTop.classList.remove('show');
+        }
+      });
     });
   </script>
 </body>
