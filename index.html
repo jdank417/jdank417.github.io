@@ -265,7 +265,6 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      margin-left: 1rem;
     }
     .menu-toggle i {
       font-size: 1.2rem;
@@ -1167,11 +1166,11 @@
     .menu-toggle.open{
       transform: translateX(-280px);     /* 280 px = drawer width */
     }
-    /* ========= definitive stacking order (highest number on top) ========= */
-    header       { z-index:  500; }   /* header bar – dimmed by overlay      */
-    .overlay     { z-index:  800; }   /* grey curtain                        */
+    /* final z‑index map */
+    header       { z-index:  800; }   /* will be dimmed by overlay           */
+    .overlay     { z-index:  900; }   /* grey curtain                        */
     .mobile-nav  { z-index: 1000; }   /* white sliding drawer                */
-    .menu-toggle { z-index: 1200; }   /* ☰ / ✕ button – always in front      */
+    .menu-toggle { z-index: 1100; }   /* independent ☰ / ✕ always on top     */
   </style>
 </head>
 <body>
@@ -1194,12 +1193,14 @@
         <button class="theme-toggle" id="theme-toggle">
           <i class="fas fa-moon"></i>
         </button>
-        <div class="menu-toggle" id="menu-toggle">
-          <i class="fas fa-bars"></i>
-        </div>
       </nav>
     </div>
   </header>
+
+  <!-- stand‑alone hamburger / ✕ -->
+    <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
+      <i class="fas fa-bars"></i>
+    </button>
 
   <!-- Mobile Navigation -->
   <div class="mobile-nav" id="mobile-nav">
