@@ -1042,6 +1042,27 @@
       opacity: 1;
       transform: translateY(0);
     }
+    /* Blinking cursor animation */
+    @keyframes blinkCursor {
+      0%, 50%   { opacity: 1; }
+      50.01%,100% { opacity: 0; }
+    }
+
+    .hero-title .cursor {
+      display: inline-block;
+      color: #000;          /* ← make the cursor black */
+      animation: blinkCursor 1s steps(2, start) infinite;
+    }
+
+    /* NEW: remove the highlight bar for the cursor */
+    .hero-title .cursor::after {
+      content: none;   /* no pseudo‑element = no underline */
+    }
+    /* DARK‑MODE override */
+    [data-theme="dark"] .hero-title .cursor {
+      color: #fff;          /* white cursor in dark mode */
+    }
+
 
     /* RESPONSIVE ADJUSTMENTS */
     @media (max-width: 1200px) {
@@ -1177,7 +1198,7 @@
     <div class="hero-bg"></div>
     <div class="hero-content">
       <h5 class="hero-subtitle">Full Stack Software Developer</h5>
-      <h1 class="hero-title">C:\Portfolio\<span>Jason Dank</span>> </h1>
+      <h1 class="hero-title">C:\Portfolio\<span>Jason Dank</span>><span class="cursor">_</span></h1>
       <p class="hero-description">I specialize in building scalable, user-focused applications across web, mobile, and backend systems. With a solid foundation in full stack development and practical experience integrating machine learning solutions, I deliver high-performance products that meet real-world business needs.</p>
       <div class="hero-cta">
         <a href="#portfolio" class="btn btn-primary">
