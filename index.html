@@ -1135,6 +1135,43 @@
         width: 100%;
       }
     }
+    /* === Side‑menu fixes === */
+    .desktop-nav { display:none !important; }      /* hide inline links everywhere   */
+    .menu-toggle { display:flex !important;        /* show hamburger at all widths   */
+                   position:relative; z-index:1400;}/* stays above the drawer        */
+    .mobile-nav  { z-index:1200; }                 /* drawer, below hamburger        */
+    /* === Drawer close button ====================== */
+    .mobile-nav-header{ position:relative; }
+
+    .mobile-nav-close{
+      position:absolute;          /* sits in the top‑right corner of drawer */
+      top:.2rem; right:.2rem;
+      background:none; border:none; cursor:pointer;
+      font-size:1.6rem; color:var(--text-color);
+      z-index:1500;               /* above everything inside the drawer     */
+    }
+    .mobile-nav-close:hover{ color:var(--primary-color); }
+    /* === keep one hamburger / X & place it inside drawer ================ */
+    .menu-toggle{
+      position:fixed;            /* take it out of the flow, pin to viewport */
+      top:1rem;                  /* space from top edge */
+      right:1rem;                /* sits at the drawer’s edge (same right side) */
+      z-index:2147483647;              /* above the drawer (drawer is 1200)          */
+      display:flex !important;   /* visible on every screen width              */
+
+      /* optional cosmetics so it looks nice over the white panel */
+      background:var(--background-color);
+      box-shadow:0 0 0 2px rgba(0,0,0,.05);
+      transition: transform .35s ease;   /* smooth motion */
+    }
+    .menu-toggle.open{
+      transform: translateX(-280px);     /* 280 px = drawer width */
+    }
+    /* ========= definitive stacking order (highest number on top) ========= */
+    header       { z-index:  500; }   /* header bar – dimmed by overlay      */
+    .overlay     { z-index:  800; }   /* grey curtain                        */
+    .mobile-nav  { z-index: 1000; }   /* white sliding drawer                */
+    .menu-toggle { z-index: 1200; }   /* ☰ / ✕ button – always in front      */
   </style>
 </head>
 <body>
@@ -1168,9 +1205,6 @@
   <div class="mobile-nav" id="mobile-nav">
     <div class="mobile-nav-header">
       <a href="#" class="nav-logo">JD</a>
-      <button class="mobile-nav-close" id="mobile-nav-close">
-        <i class="fas fa-times"></i>
-      </button>
     </div>
     <ul>
       <li><a href="#hero" class="mobile-link">Home</a></li>
@@ -1699,6 +1733,26 @@
         }
       });
     });
+    /* === Hamburger Drawer logic =========================================== */
+    const menuToggle  = document.getElementById('menu-toggle'); // the button with bars
+    const mobileNav   = document.getElementById('mobile-nav');  // side drawer
+    const overlay     = document.getElementById('overlay');     // dark backdrop
+    const drawerLinks = document.querySelectorAll('.mobile-link');
+
+
+    menuToggle.addEventListener('click', toggleDrawer);
+    overlay   .addEventListener('click', toggleDrawer);
+    drawerLinks.forEach(l => l.addEventListener('click', toggleDrawer));
+
+    function toggleDrawer () {
+      mobileNav .classList.toggle('active');  // slide in/out
+      overlay   .classList.toggle('active');  // fade backdrop
+      menuToggle.classList.toggle('open');    // remember state
+
+      const icon = menuToggle.querySelector('i');
+      icon.classList.toggle('fa-bars',  !menuToggle.classList.contains('open'));
+      icon.classList.toggle('fa-times',  menuToggle.classList.contains('open'));
+    }
   </script>
 </body>
 </html>
