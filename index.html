@@ -1163,14 +1163,51 @@
       box-shadow:0 0 0 2px rgba(0,0,0,.05);
       transition: transform .35s ease;   /* smooth motion */
     }
-    .menu-toggle.open{
-      transform: translateX(-280px);     /* 280 px = drawer width */
-    }
     /* final z‑index map */
     header       { z-index:  800; }   /* will be dimmed by overlay           */
     .overlay     { z-index:  900; }   /* grey curtain                        */
     .mobile-nav  { z-index: 1000; }   /* white sliding drawer                */
     .menu-toggle { z-index: 1100; }   /* independent ☰ / ✕ always on top     */
+
+    /* ───── Fancy toggle button ───── */
+    .menu-toggle{
+      position:fixed; top:1rem; right:1rem;
+      width:48px; height:48px;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:50%;
+      background:rgba(255,255,255,0.15);
+      box-shadow:0 8px 32px rgba(0,0,0,.18);
+      backdrop-filter:blur(8px);           /* glass‑morphism */
+      border:1px solid rgba(255,255,255,.25);
+      cursor:pointer; transition:transform .35s ease, background .35s ease;
+      z-index:1100;
+    }
+    .menu-toggle:hover{ background:rgba(255,255,255,0.25); transform:scale(1.05); }
+
+    .bar-wrap,
+    .bar-wrap::before,
+    .bar-wrap::after{
+      content:"";
+      display:block;
+      width:22px; height:2px;
+      background:var(--text-color);
+      border-radius:2px;
+      transition:.35s cubic-bezier(.55,.085,.68,.53); /* smooth */
+    }
+    .bar-wrap{ position:relative; }
+
+    .bar-wrap::before{ position:absolute; top:-6px; }
+    .bar-wrap::after { position:absolute; top: 6px; }
+
+    /* —— morph to ✕ when button has .open —— */
+    .menu-toggle.open .bar-wrap      { background:transparent; }   /* hide middle line */
+    .menu-toggle.open .bar-wrap::before{
+      transform:translateY(6px) rotate(45deg);
+    }
+    .menu-toggle.open .bar-wrap::after{
+      transform:translateY(-6px) rotate(-45deg);
+    }
+
   </style>
 </head>
 <body>
@@ -1199,8 +1236,9 @@
 
   <!-- stand‑alone hamburger / ✕ -->
     <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
-      <i class="fas fa-bars"></i>
+      <span class="bar-wrap"></span>
     </button>
+
 
   <!-- Mobile Navigation -->
   <div class="mobile-nav" id="mobile-nav">
