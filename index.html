@@ -959,6 +959,58 @@
       font-size: 0.9rem;
     }
 
+    /* ===== RECOMMENDATIONS SECTION ===== */
+    #recommendations {
+      background: var(--light-gray);
+    }
+    .recommendations-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .recommendation-card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      position: relative;
+    }
+    .recommendation-card .quote-icon {
+      font-size: 1.5rem;
+      color: var(--secondary-color);
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+    .recommendation-text {
+      font-style: italic;
+      margin: 2rem 0 1.5rem;
+      color: var(--text-color);
+    }
+    .recommendation-author {
+      margin-top: 1.5rem;
+      text-align: right;
+    }
+
+    .author-name {
+      display: block;
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1rem;
+    }
+
+    .author-title {
+      display: block;
+      font-weight: 400;
+      color: var(--light-text);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+
+
+
+
     /* ANIMATIONS */
     @keyframes fadeInUp {
       0% {
@@ -1077,6 +1129,7 @@
           <li><a href="#experience">Experience</a></li>
           <li><a href="#skills">Skills</a></li>
           <li><a href="#portfolio">Projects</a></li>
+          <li><a href="#recommendations">Recommendations</a></li>
           <li><a href="#certifications">Certifications</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
@@ -1105,6 +1158,7 @@
       <li><a href="#experience" class="mobile-link">Experience</a></li>
       <li><a href="#skills" class="mobile-link">Skills</a></li>
       <li><a href="#portfolio" class="mobile-link">Projects</a></li>
+      <li><a href="#recommendations" class="mobile-link">Recommendations</a></li>
       <li><a href="#certifications" class="mobile-link">Certifications</a></li>
       <li><a href="#contact" class="mobile-link">Contact</a></li>
     </ul>
@@ -1436,6 +1490,29 @@
       <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
     </div>
   </section>
+
+  <!-- RECOMMENDATIONS SECTION -->
+  <section id="recommendations" class="section-padding">
+    <div class="container">
+      <h2 class="section-title">Recommendations</h2>
+      <div class="recommendations-container fade-in">
+        <figure class="recommendation-card">
+          <i class="fas fa-quote-left quote-icon"></i>
+          <blockquote class="recommendation-text">
+            “Jason joined our Endpoint Systems Management team as a co‑op and immediately made a difference. He created an automated, standardized naming system for our Mac fleet—solving a problem that had persisted for years—and then smoothly shifted to build a robust Windows solution. His teamwork, creative problem‑solving, and top‑notch coding skills make him an invaluable asset to any organization.”
+          </blockquote>
+          <figcaption class="recommendation-author">
+            <span class="author-name">Kurt Levitan</span>
+            <span class="author-title">
+              Microsoft Endpoint Architect &amp; Team Lead, Harvard University
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+
 
   <!-- CONTACT SECTION -->
   <section id="contact" class="section-padding">
