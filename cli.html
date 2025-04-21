@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jason Dank – Portfolio CLI</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
+      margin: 0;
+    }
+    #terminal {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .line, .output {
+      display: block;
+      white-space: pre-wrap;
+    }
+    .input-line {
+      display: flex;
+      align-items: center;
+    }
+    .prompt {
+      margin-right: 0.5em;
+    }
+    #cmdInput {
+      background: none;
+      border: none;
+      color: #0f0;
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
+      flex: 1;
+    }
+    ::selection {
+      background: rgba(0,255,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal">
+    <div class="line">Welcome to Jason Dank’s Portfolio CLI. Type 'help' to see commands.</div>
+    <div class="input-line">
+      <span class="prompt">&gt; </span><input type="text" id="cmdInput" autofocus autocomplete="off">
+    </div>
+  </div>
+  <script>
+    const sections = {
+      'about.txt':
+        "I'm a passionate full stack software developer with a strong foundation in building scalable web, mobile, and automation solutions. I integrate cutting-edge machine learning techniques where needed while focusing on end-to-end system design.\nMost recently I worked as an Endpoint Systems Engineer at Harvard University, developing tools that streamlined IT processes and drove operational efficiency.",
+      'education.txt':
+        "B.S. in Computer Science – Wentworth Institute of Technology\nMinors: Data Science, Applied Mathematics, Business Analytics, Computer Networking\nGPA: 3.7\nDean’s List: Fall 2022, Spring 2023, Fall 2023, Spring 2024, Fall 2024\nExpected Graduation: August 2026",
+      'experience.txt':
+        "2025 – Endpoint Systems Engineer Intern – Harvard University:\n  • Designed and implemented a custom Linux monitoring application with both macOS and Windows versions, improving reliability by 30%.\n  • Developed and deployed a Mac device renaming application using Linux and Swift Dialog to enforce naming conventions across Harvard units.\n  • Automated workflows with PowerShell & Unix scripting, boosting provisioning and device management efficiency.\n  • Collaborated with IT Field teams to optimize managed services.\n\n2025 – Director of Technologies – Engineering Hope (Hacking Injustice):\n  • Built scalable digital infrastructure for annual hackathons.\n  • Procured and negotiated licenses for essential tools and platforms.\n  • Led a technical advisory team to mentor students.\n  • Managed full stack development for event management systems.\n\n2024 – Technical Support Engineer Intern – Harvard University:\n  • Deployed secure multi-OS configurations for 2,000+ campus users.\n  • Streamlined support workflows, reducing ticket resolution time.\n  • Reworked onboarding documentation for multiple units.\n  • Trained incoming interns and contractors.\n\n2023–Present – Campus Leadership Roles – Wentworth Institute of Technology:\n  • Vice President, Student Government: Organized initiatives using Agile strategies and a Jira board.\n  • Director of Business Affairs, Student Government: Built a barcode scanner webapp & introduced halal/kosher dining options.\n  • Captain, Sailing Team: Certified US Sailing Level 1; coached team to highest season score since 2019.",
+      'skills.txt':
+        "Programming Languages: Python (Advanced), Java (Advanced), C/C++ (Intermediate), SQL (Intermediate), Bash/Shell Scripting (Advanced), Swift (Intermediate)\nMachine Learning & Data: Pandas & NumPy, Scikit‑learn, TensorFlow & Keras, Jupyter Notebooks, Data Visualization, NLP\nDevOps & IT: PowerShell Scripting, Linux SysAdmin, SCCM & JAMF Pro, Windows Admin, AWS & Azure, Docker & Containers\nSoft Skills: Project Management, Team Leadership, Technical Communication, Problem Solving, Public Speaking, Mentoring",
+      'projects.txt':
+        "GroceryBarcodeScanner – A scalable microservice for scanning and categorizing retail products using ML (Python, Flask, SQL)\nHUIT_BOT – Conversational NLP chatbot for Harvard IT onboarding (Python, Spacy)\nStock Predictor – CNN‑LSTM model forecasting stock prices with technical indicators (TensorFlow, LSTM, CNN)\nDSPM (Dank's Squash Pie Monitor) – Python GUI for remote Linux monitoring via SSH (macOS/Windows)\nBartender‑GPT – iOS cocktail recommendation app in Swift, live on the App Store",
+      'recommendations.txt':
+        "“Jason worked with our Endpoint Systems Management team as a coop. He quickly integrated himself and standardized Mac naming, then coded Windows solutions. He’s a strong team player, inventive problem solver, and excellent programmer. I’m confident he adds value anywhere.”\n– Kurt Levitan, Microsoft Endpoint Architect & Team Lead, Harvard University",
+      'certifications.txt':
+        "Credly Badge: https://www.credly.com/share?badge_id=992f9097-6f64-4d9d-8e86-1091323b05ae\nCredly Badge: https://www.credly.com/share?badge_id=e5fd2530-7870-4762-9f30-2c537853b165",
+      'contact.txt':
+        "Email: jasondank@yahoo.com\nLocation: Boston, Massachusetts\nLinkedIn: https://www.linkedin.com/in/jason-dank\nGitHub: https://github.com/jdank417"
+    };
+
+    const terminal = document.getElementById('terminal');
+    const input    = document.getElementById('cmdInput');
+
+    function print(text) {
+      const div = document.createElement('div');
+      div.className = 'output';
+      div.textContent = text;
+      terminal.insertBefore(div, input.parentElement);
+    }
+
+    function execute(cmd) {
+      const args = cmd.trim().split(/\s+/),
+            base = args[0].toLowerCase();
+
+      switch (base) {
+        case 'help':
+          print(
+`Commands:
+  ls           - list files
+  cat [file]   - view contents (.txt optional)
+  clear        - reset terminal
+  exit         - return to main site
+  help         - show commands`
+          );
+          break;
+
+        case 'ls':
+          print(Object.keys(sections).join('  '));
+          break;
+
+        case 'cat':
+          if (!args[1]) {
+            print('cat: missing file operand');
+            break;
+          }
+          let file = args[1];
+          // fallback: if user typed "about" and not "about.txt"
+          if (!sections[file] && sections[file + '.txt']) {
+            file = file + '.txt';
+          }
+          if (sections[file]) {
+            print(sections[file]);
+          } else {
+            print(`cat: ${args[1]}: No such file`);
+          }
+          break;
+
+        case 'clear':
+          terminal.querySelectorAll('.output, .line').forEach(el => el.remove());
+          break;
+
+        case 'exit':
+          try {
+            window.top.location.href = 'index.html';
+          } catch {
+            window.location.href = 'index.html';
+          }
+          break;
+
+        default:
+          if (base) print(`${base}: command not found. Type 'help'.`);
+      }
+
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const cmd = input.value;
+        print('> ' + cmd);
+        execute(cmd);
+        input.value = '';
+      }
+    });
+  </script>
+</body>
+</html>

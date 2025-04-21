@@ -1231,9 +1231,38 @@
     .mobile-nav-header .theme-toggle{
       margin-left:0 !important;
     }
+
+    #cli-panel {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000;
+      z-index: 2000;
+    }
+    #cli-panel iframe {
+      width: 100%; height: 100%; border: none;
+    }
+    /* Sidebar trigger */
+    #cli-toggle-btn {
+      position: fixed;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      background: var(--primary-color);
+      color: #fff;
+      padding: 0.5rem;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      z-index: 1500;
+    }
+
   </style>
 </head>
 <body>
+
+  <!-- CLI Toggle Sidebar Button -->
+  <div id="cli-toggle-btn"><i class="fas fa-terminal"></i></div>
+
   <!-- HEADER / NAVIGATION -->
   <header id="header">
     <div class="nav-container">
@@ -1734,6 +1763,11 @@
     <i class="fas fa-arrow-up"></i>
   </a>
 
+  <!-- CLI PANEL (loads external cli.html) -->
+  <div id="cli-panel">
+    <iframe src="cli.html" title="Portfolio CLI"></iframe>
+  </div>
+
   <script>
     // Theme Toggle Script
     const themeToggleBtn = document.getElementById('theme-toggle');
@@ -1816,6 +1850,14 @@
       icon.classList.toggle('fa-bars',  !menuToggle.classList.contains('open'));
       icon.classList.toggle('fa-times',  menuToggle.classList.contains('open'));
     }
+
+    // Toggle CLI Panel visibility
+    const panel = document.getElementById('cli-panel');
+    const toggleBtn = document.getElementById('cli-toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+      panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+    });
+
   </script>
 </body>
 </html>
