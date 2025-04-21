@@ -11,6 +11,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <style>
+    :root {
+      --cli-width: 360px;
+    }
+    /* … */
+    #cli-sidebar {
+      width: var(--cli-width);
+      /* remove the old hard‑coded 360px */
+      min-width: 450px;
+      max-width: calc(100vw - 100px);
+    }
+    /* push the toggle button based on that same variable */
+    #cli-toggle-btn.open {
+      left: calc(var(--cli-width) + 1rem);
+    }
+
+    #cli-resizer {
+      position: absolute;
+      top: 0; right: 0;
+      width: 6px; height: 100%;
+      cursor: ew-resize;
+      z-index: 1601; /* above the sidebar but below the close‑X */
+    }
+
+
+
     /* CSS Variables & Base Styles */
     :root {
       --primary-color: #0070f3;
@@ -1232,36 +1257,76 @@
       margin-left:0 !important;
     }
 
-    #cli-panel {
-      display: none;
+    /* CLI SIDEBAR */
+    #cli-sidebar {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;           /* ← now anchored to the left edge */
+      right: auto;       /* ← remove the right setting */
+      width: var(--cli-width);    /* ← use the CSS variable */
+      height: 100%;
       background: #000;
-      z-index: 2000;
-    }
-    #cli-panel iframe {
-      width: 100%; height: 100%; border: none;
-    }
-    /* Sidebar trigger */
-    #cli-toggle-btn {
-      position: fixed;
-      left: 0; top: 50%;
-      transform: translateY(-50%);
-      background: var(--primary-color);
-      color: #fff;
-      padding: 0.5rem;
-      border-radius: 0 8px 8px 0;
-      cursor: pointer;
+      transform: translateX(-100%);  /* ← hide it off‑screen to the left */
+      transition: transform 0.3s ease;
       z-index: 1500;
+      overflow: hidden;
     }
+    #cli-sidebar.open {
+      transform: translateX(0);      /* ← slide it back in */
+    }
+
+    #cli-sidebar iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* make the toggle button smoothly slide */
+    #cli-toggle-btn {
+      transition: left 0.3s ease;
+    }
+
+    /* when sidebar is open, push the button right by sidebar width + margin */
+    #cli-toggle-btn.open {
+      left: calc(var(--cli-width) + 1rem);
+    }
+
+
+    #cli-toggle-btn {
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  #cli-toggle-btn:hover {
+    color: var(--primary-hover);
+  }
+
+
 
   </style>
 </head>
 <body>
 
-  <!-- CLI Toggle Sidebar Button -->
-  <div id="cli-toggle-btn"><i class="fas fa-terminal"></i></div>
+
+    <!-- CLI Sidebar -->
+  <div id="cli-sidebar">
+    <button id="cli-close-btn" style="
+        position:absolute; top:8px; right:8px;
+        background:none; border:none; color:#0f0;
+        font-size:1.2rem; cursor:pointer;
+      ">✕</button>
+    <iframe src="cli.html" title="Portfolio CLI"></iframe>
+    <!-- drag this to resize -->
+    <div id="cli-resizer"></div>
+  </div>
+
 
   <!-- HEADER / NAVIGATION -->
   <header id="header">
@@ -1308,6 +1373,43 @@
       <li><a href="#recommendations" class="mobile-link">Recommendations</a></li>
       <li><a href="#certifications" class="mobile-link">Certifications</a></li>
       <li><a href="#contact" class="mobile-link">Contact</a></li>
+      <li style="display: flex; align-items: center; gap: 0.5rem;">
+  <label for="cli-toggle-switch" style="
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--primary-color);
+  ">
+    <i class="fas fa-terminal" style="margin-right: 8px;"></i>
+    CLI
+    <input type="checkbox" id="cli-toggle-switch" style="display: none;" />
+    <span style="
+      margin-left: 12px;
+      position: relative;
+      width: 42px;
+      height: 22px;
+      background: #ccc;
+      border-radius: 22px;
+      transition: background 0.3s ease;
+      display: inline-block;
+    ">
+      <span id="cli-thumb" style="
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 18px;
+        height: 18px;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+      "></span>
+    </span>
+  </label>
+</li>
+
+
     </ul>
     <div class="mobile-nav-socials">
       <a href="https://github.com/jdank417" target="_blank"><i class="fab fa-github"></i></a>
@@ -1763,101 +1865,157 @@
     <i class="fas fa-arrow-up"></i>
   </a>
 
-  <!-- CLI PANEL (loads external cli.html) -->
-  <div id="cli-panel">
-    <iframe src="cli.html" title="Portfolio CLI"></iframe>
-  </div>
+
 
   <script>
-    // Theme Toggle Script
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const themeIcon = themeToggleBtn.querySelector('i');
+document.addEventListener('DOMContentLoaded', () => {
+  // Everything below this happens AFTER the DOM is ready
 
-    // Set saved theme preference or default to 'light'
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    updateThemeIcon(currentTheme);
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const themeIcon = themeToggleBtn?.querySelector('i');
 
-    themeToggleBtn.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      updateThemeIcon(newTheme);
-    });
+  // Theme stuff
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  if (themeIcon) updateThemeIcon(currentTheme);
 
-    function updateThemeIcon(theme) {
-      if (theme === 'dark') {
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-      } else {
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-      }
-    }
+  themeToggleBtn?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+  });
 
-    // Portfolio Filtering Functionality
-    document.addEventListener('DOMContentLoaded', () => {
-      const fadeElements = document.querySelectorAll('.fade-in');
-      fadeElements.forEach(el => el.classList.add('show'));
+  function updateThemeIcon(theme) {
+    if (!themeIcon) return;
+    themeIcon.classList.toggle('fa-moon', theme === 'light');
+    themeIcon.classList.toggle('fa-sun', theme === 'dark');
+  }
 
-      const filterButtons = document.querySelectorAll('.filter-button');
-      const portfolioItems = document.querySelectorAll('.portfolio-item');
+  // Hamburger menu
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileNav  = document.getElementById('mobile-nav');
+  const overlay    = document.getElementById('overlay');
+  const drawerLinks = document.querySelectorAll('.mobile-link');
 
-      filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const filterValue = button.getAttribute('data-filter');
-          portfolioItems.forEach(item => {
-            const itemCategories = item.getAttribute('data-category');
-            if (filterValue === 'all' || itemCategories.includes(filterValue)) {
-              item.style.display = '';
-            } else {
-              item.style.display = 'none';
-            }
-          });
-          filterButtons.forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
-        });
+  menuToggle?.addEventListener('click', toggleDrawer);
+  overlay?.addEventListener('click', toggleDrawer);
+  drawerLinks.forEach(l => l.addEventListener('click', toggleDrawer));
+
+  function toggleDrawer () {
+    mobileNav?.classList.toggle('active');
+    overlay?.classList.toggle('active');
+    menuToggle?.classList.toggle('open');
+  }
+
+  // CLI Sidebar
+  const sidebar    = document.getElementById('cli-sidebar');
+  const closeBtn   = document.getElementById('cli-close-btn');
+  const cliSwitch  = document.getElementById('cli-toggle-switch');
+  const cliThumb   = document.getElementById('cli-thumb');
+
+  cliSwitch?.addEventListener('change', () => {
+    const isOpen = cliSwitch.checked;
+    sidebar?.classList.toggle('open', isOpen);
+    cliThumb?.style.setProperty('transform', isOpen ? 'translateX(20px)' : 'translateX(0)');
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    sidebar?.classList.remove('open');
+    cliSwitch.checked = false;
+    cliThumb?.style.setProperty('transform', 'translateX(0)');
+  });
+
+  // Portfolio fade in
+  document.querySelectorAll('.fade-in').forEach(el => el.classList.add('show'));
+
+  // Portfolio filtering
+  const filterButtons = document.querySelectorAll('.filter-button');
+  const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const filterValue = button.getAttribute('data-filter');
+      portfolioItems.forEach(item => {
+        const categories = item.getAttribute('data-category');
+        item.style.display = (filterValue === 'all' || categories.includes(filterValue)) ? '' : 'none';
       });
-
-      // Back to Top Button
-      const backToTop = document.getElementById('back-to-top');
-      window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
-          backToTop.classList.add('show');
-        } else {
-          backToTop.classList.remove('show');
-        }
-      });
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
     });
-    /* === Hamburger Drawer logic =========================================== */
-    const menuToggle  = document.getElementById('menu-toggle'); // the button with bars
-    const mobileNav   = document.getElementById('mobile-nav');  // side drawer
-    const overlay     = document.getElementById('overlay');     // dark backdrop
-    const drawerLinks = document.querySelectorAll('.mobile-link');
+  });
 
-
-    menuToggle.addEventListener('click', toggleDrawer);
-    overlay   .addEventListener('click', toggleDrawer);
-    drawerLinks.forEach(l => l.addEventListener('click', toggleDrawer));
-
-    function toggleDrawer () {
-      mobileNav .classList.toggle('active');  // slide in/out
-      overlay   .classList.toggle('active');  // fade backdrop
-      menuToggle.classList.toggle('open');    // remember state
-
-      const icon = menuToggle.querySelector('i');
-      icon.classList.toggle('fa-bars',  !menuToggle.classList.contains('open'));
-      icon.classList.toggle('fa-times',  menuToggle.classList.contains('open'));
+  // Back to top button
+  const backToTop = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTop?.classList.add('show');
+    } else {
+      backToTop?.classList.remove('show');
     }
+  });
+});
 
-    // Toggle CLI Panel visibility
-    const panel = document.getElementById('cli-panel');
-    const toggleBtn = document.getElementById('cli-toggle-btn');
-    toggleBtn.addEventListener('click', () => {
-      panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
-    });
+window.addEventListener('message', e => {
+  if (e.data === 'CLOSE_CLI') {
+    const sidebar      = document.getElementById('cli-sidebar');
+    const toggleBtn    = document.getElementById('cli-toggle-btn');
+    const cliSwitch    = document.getElementById('cli-toggle-switch');
+    const cliThumb     = document.getElementById('cli-thumb');
 
-  </script>
+    // Close the sidebar
+    sidebar.classList.remove('open');
+    // Reset the CLI toggle button (☰/✕)
+    toggleBtn.classList.remove('open');
+    // Uncheck the CLI switch in the menu
+    if (cliSwitch) {
+      cliSwitch.checked = false;
+    }
+    // And slide the thumb back
+    if (cliThumb) {
+      cliThumb.style.transform = 'translateX(0)';
+    }
+  }
+});
+
+// listen for exit from the iframe
+window.addEventListener('message', e => {
+  if (e.data === 'CLOSE_CLI') {
+    const cliSwitch = document.getElementById('cli-toggle-switch');
+    // un‑check it
+    cliSwitch.checked = false;
+    // fire its change handler so it actually closes the CLI
+    cliSwitch.dispatchEvent(new Event('change'));
+  }
+});
+
+// grab the resizer
+const resizer = document.getElementById('cli-resizer');
+let isResizing = false;
+
+resizer.addEventListener('pointerdown', e => {
+  isResizing = true;
+  resizer.setPointerCapture(e.pointerId);
+  document.body.style.userSelect = 'none';
+});
+
+document.addEventListener('pointermove', e => {
+  if (!isResizing) return;
+  const w = Math.max(200, Math.min(e.clientX, window.innerWidth - 100));
+  document.documentElement.style.setProperty('--cli-width', w + 'px');
+});
+
+document.addEventListener('pointerup', e => {
+  if (!isResizing) return;
+  isResizing = false;
+  document.body.style.userSelect = '';
+  resizer.releasePointerCapture(e.pointerId);
+});
+
+
+
+
+</script>
 </body>
 </html>

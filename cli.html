@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jason Dank – Portfolio CLI</title>
+  <title>Jason Dank – Portfolio CLI</title>
   <style>
     body {
       background-color: #000;
@@ -12,21 +12,30 @@
       padding: 20px;
       margin: 0;
     }
+
     #terminal {
       max-width: 800px;
       margin: 0 auto;
+      overflow-y: auto;
+      height: 100vh;
+      box-sizing: border-box;
+      padding-bottom: 20px;
     }
+
     .line, .output {
       display: block;
       white-space: pre-wrap;
     }
+
     .input-line {
       display: flex;
       align-items: center;
     }
+
     .prompt {
       margin-right: 0.5em;
     }
+
     #cmdInput {
       background: none;
       border: none;
@@ -35,7 +44,25 @@
       font-size: inherit;
       outline: none;
       flex: 1;
+      caret-color: transparent;
+      position: relative;
     }
+
+    /* blinking cursor */
+    #cmdInput::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 1px;
+      height: 1em;
+      background: #0f0;
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
     ::selection {
       background: rgba(0,255,0,0.3);
     }
@@ -43,12 +70,14 @@
 </head>
 <body>
   <div id="terminal">
-    <div class="line">Welcome to Jason Dank’s Portfolio CLI. Type 'help' to see commands.</div>
     <div class="input-line">
-      <span class="prompt">&gt; </span><input type="text" id="cmdInput" autofocus autocomplete="off">
+      <span class="prompt">&gt; </span>
+      <input type="text" id="cmdInput" autofocus autocomplete="off" />
     </div>
   </div>
+
   <script>
+  (function(){
     const sections = {
       'about.txt':
         "I'm a passionate full stack software developer with a strong foundation in building scalable web, mobile, and automation solutions. I integrate cutting-edge machine learning techniques where needed while focusing on end-to-end system design.\nMost recently I worked as an Endpoint Systems Engineer at Harvard University, developing tools that streamlined IT processes and drove operational efficiency.",
@@ -63,35 +92,76 @@
       'recommendations.txt':
         "“Jason worked with our Endpoint Systems Management team as a coop. He quickly integrated himself and standardized Mac naming, then coded Windows solutions. He’s a strong team player, inventive problem solver, and excellent programmer. I’m confident he adds value anywhere.”\n– Kurt Levitan, Microsoft Endpoint Architect & Team Lead, Harvard University",
       'certifications.txt':
-        "Credly Badge: https://www.credly.com/share?badge_id=992f9097-6f64-4d9d-8e86-1091323b05ae\nCredly Badge: https://www.credly.com/share?badge_id=e5fd2530-7870-4762-9f30-2c537853b165",
+        "Jamf 100\nJamf 170",
       'contact.txt':
         "Email: jasondank@yahoo.com\nLocation: Boston, Massachusetts\nLinkedIn: https://www.linkedin.com/in/jason-dank\nGitHub: https://github.com/jdank417"
     };
 
+    const commands = ['help','ls','cat','clear','exit','whoami','date','history','more','sudo','theme','joke'];
+    const files    = Object.keys(sections).map(f => f.replace(/\.txt$/,''));
     const terminal = document.getElementById('terminal');
     const input    = document.getElementById('cmdInput');
+    let history    = [];
+    let hIndex     = -1;
 
-    function print(text) {
+    function print(txt, isCmd=false) {
       const div = document.createElement('div');
-      div.className = 'output';
-      div.textContent = text;
-      terminal.insertBefore(div, input.parentElement);
+      div.className = isCmd ? 'line' : 'output';
+      div.textContent = txt;
+      terminal.insertBefore(div, input.parentNode);
+      terminal.scrollTop = terminal.scrollHeight;
     }
 
-    function execute(cmd) {
-      const args = cmd.trim().split(/\s+/),
-            base = args[0].toLowerCase();
+    function showBanner() {
+      print(" ____    ______  __  __  __  __     \n" +
+              "/\\  _`\\ /\\  _  \\/\\ \\/\\ \\/\\ \\/\\ \\    \n" +
+              "\\ \\ \\/\\ \\ \\ \\L\\ \\ \\ `\\\\ \\ \\ \\/'/'   \n" +
+              " \\ \\ \\ \\ \\ \\  __ \\ \\ , ` \\ \\ , <    \n" +
+              "  \\ \\ \\_\\ \\ \\ \\/\\ \\ \\ \\`\\ \\ \\ \\\\`\\  \n" +
+              "   \\ \\____/\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\\n" +
+              "    \\/___/  \\/_/\\/_/\\/_/\\/_/\\/_/\\/_/" +
+              "".trim());
+      print("Welcome to Jason Dank’s Portfolio CLI. Type 'help' to see commands.\n")
+    }
 
-      switch (base) {
+    function paginate(fileKey) {
+      const lines = sections[fileKey].split('\n');
+      let page = 0, pageSize = 10;
+      function showPage() {
+        print(lines.slice(page*pageSize, (page+1)*pageSize).join('\n'));
+        page++;
+        if (page*pageSize < lines.length) {
+          print('-- more -- (press Enter)', true);
+          input.addEventListener('keydown', function onEnter(e) {
+            if (e.key === 'Enter') {
+              input.removeEventListener('keydown', onEnter);
+              showPage();
+            }
+          });
+        }
+      }
+      showPage();
+    }
+
+    function execute(line) {
+      const args = line.trim().split(/\s+/),
+            cmd  = args[0]?.toLowerCase();
+
+      switch (cmd) {
         case 'help':
-          print(
-`Commands:
-  ls           - list files
-  cat [file]   - view contents (.txt optional)
-  clear        - reset terminal
-  exit         - return to main site
-  help         - show commands`
-          );
+          print(`Commands:
+  ls             list files
+  cat [file]     view file
+  more [file]    page through file
+  clear          clear screen
+  exit           back to site
+  whoami         display username
+  date           show current date/time
+  history        show command history
+  sudo           ??? (try it)
+  theme [name]   switch color theme
+  joke           tell a joke
+  help           this menu`);
           break;
 
         case 'ls':
@@ -99,49 +169,116 @@
           break;
 
         case 'cat':
-          if (!args[1]) {
-            print('cat: missing file operand');
-            break;
-          }
-          let file = args[1];
-          // fallback: if user typed "about" and not "about.txt"
-          if (!sections[file] && sections[file + '.txt']) {
-            file = file + '.txt';
-          }
-          if (sections[file]) {
-            print(sections[file]);
-          } else {
-            print(`cat: ${args[1]}: No such file`);
-          }
+          if (!args[1]) return print('cat: missing file');
+          let f = args[1];
+          if (!sections[f] && sections[f+'.txt']) f += '.txt';
+          sections[f]
+            ? print(sections[f])
+            : print(`cat: ${args[1]}: No such file`);
+          break;
+
+        case 'more':
+          if (!args[1]) return print('more: missing file');
+          let m = args[1];
+          if (!sections[m] && sections[m+'.txt']) m += '.txt';
+          if (sections[m]) paginate(m);
+          else print(`more: ${args[1]}: No such file`);
           break;
 
         case 'clear':
-          terminal.querySelectorAll('.output, .line').forEach(el => el.remove());
+          terminal.querySelectorAll('.line, .output').forEach(el => el.remove());
           break;
 
         case 'exit':
-          try {
-            window.top.location.href = 'index.html';
-          } catch {
-            window.location.href = 'index.html';
+          window.parent.postMessage('CLOSE_CLI', '*');
+          break;
+
+        case 'whoami':
+          print('jdank417');
+          break;
+
+        case 'date':
+          print(new Date().toString());
+          break;
+
+        case 'history':
+          if (!history.length) print('no history yet');
+          else history.slice().reverse().forEach((c,i) => print(`${i+1}  ${c}`));
+          break;
+
+        case 'sudo':
+          print("Whoa, easy there—you don't have root!");
+          break;
+
+        case 'theme':
+          switch ((args[1] || '').toLowerCase()) {
+            case 'neon':
+              document.body.style.color = '#0ff';
+              document.body.style.backgroundColor = '#000';
+              break;
+            case 'retro':
+              document.body.style.color = '#ff0';
+              document.body.style.backgroundColor = '#003';
+              break;
+            case 'matrix':
+              document.body.style.color = '#0f0';
+              document.body.style.backgroundColor = '#000';
+              break;
+            case 'dracula':
+              document.body.style.color = '#f8f8f2';
+              document.body.style.backgroundColor = '#282a36';
+              break;
+            default:
+              // fallback to your original green-on-black
+              document.body.style.color = '#0f0';
+              document.body.style.backgroundColor = '#000';
+              break;
           }
           break;
 
-        default:
-          if (base) print(`${base}: command not found. Type 'help'.`);
-      }
 
-      terminal.scrollTop = terminal.scrollHeight;
+        case 'joke':
+          print("Why do programmers prefer dark mode? Because light attracts bugs!");
+          break;
+
+        default:
+          if (cmd) print(`${cmd}: command not found. Type 'help'.`);
+      }
     }
 
     input.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
-        const cmd = input.value;
-        print('> ' + cmd);
-        execute(cmd);
+        const val = input.value;
+        print('> ' + val, true);
+        execute(val);
+        history.unshift(val);
+        hIndex = -1;
         input.value = '';
+        e.preventDefault();
+      }
+      else if (e.key === 'ArrowUp') {
+        if (hIndex + 1 < history.length) hIndex++;
+        input.value = history[hIndex] || '';
+        e.preventDefault();
+      }
+      else if (e.key === 'ArrowDown') {
+        if (hIndex > 0) hIndex--;
+        else { hIndex = -1; input.value = ''; }
+        input.value = history[hIndex] || '';
+        e.preventDefault();
+      }
+      else if (e.key === 'Tab') {
+        e.preventDefault();
+        const val = input.value.trim();
+        const opts = [...commands, ...files].filter(w => w.startsWith(val));
+        if (opts.length === 1) input.value = opts[0];
+        else if (opts.length > 1) print(opts.join('  '));
       }
     });
+
+    // startup
+    showBanner();
+  })();
   </script>
 </body>
 </html>
