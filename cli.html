@@ -186,6 +186,10 @@
     const files    = Object.keys(sections).map(f => f.replace(/\.txt$/,''));
     const terminal = document.getElementById('terminal');
     const input    = document.getElementById('cmdInput');
+    // Allow typing again if user clicks anywhere inside CLI
+    terminal.addEventListener('click', () => {
+      input.focus();
+    });
     let history    = [];
     let hIndex     = -1;
 
