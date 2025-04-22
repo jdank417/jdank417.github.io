@@ -230,7 +230,7 @@
 
         if (shortcutSections.includes(cmd)) {
           // Scroll to section on the main site
-          parent.document.querySelector(`#${cmd}`)?.scrollIntoView({ behavior: 'smooth' });
+          document.querySelector(`#${cmd}`)?.scrollIntoView({ behavior: 'smooth' });
 
           // Print matching CLI content (if it exists)
           let fileKey = cmd + '.txt';
