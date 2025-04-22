@@ -2036,6 +2036,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Scroll handler from CLI
+window.addEventListener('message', event => {
+  if (event.data?.type === 'SCROLL_TO_SECTION') {
+    const section = document.getElementById(event.data.id);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+});
+
+
 
 
 </script>
