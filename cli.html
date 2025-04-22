@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jason Dank – Portfolio CLI</title>
+  <title>Jason Dank – Portfolio CLI</title>
   <style>
+    :root {
+      --text-color: #0f0;
+      --background-color: #000;
+      --prompt-color: #0f0;
+      --cursor-color: #0f0;
+    }
+
     body {
-      background-color: #000;
-      color: #0f0;
+      background-color: var(--background-color);
+      color: var(--text-color);
       font-family: 'Courier New', Courier, monospace;
       padding: 20px;
       margin: 0;
@@ -28,7 +35,6 @@
       box-sizing: border-box;
     }
 
-
     .line, .output {
       display: block;
       white-space: pre-wrap;
@@ -41,12 +47,13 @@
 
     .prompt {
       margin-right: 0.5em;
+      color: var(--prompt-color);
     }
 
     #cmdInput {
       background: none;
       border: none;
-      color: #0f0;
+      color: var(--text-color);
       font-family: inherit;
       font-size: inherit;
       outline: none;
@@ -62,7 +69,7 @@
       right: 0;
       width: 1px;
       height: 1em;
-      background: #0f0;
+      background: var(--cursor-color);
       animation: blink 1s step-start infinite;
     }
 
@@ -84,7 +91,7 @@
       flex: 1;
       background: none;
       border: none;
-      color: #0f0;
+      color: var(--text-color);
       font-family: inherit;
       font-size: inherit;
       outline: none;
@@ -104,13 +111,11 @@
       caret-color: transparent;
     }
 
-
-
-
     .cli-cursor {
       font-weight: bold;
       margin-left: 2px;
       animation: blinkCursor 1s steps(2, start) infinite;
+      color: var(--cursor-color);
     }
 
     @keyframes blinkCursor {
@@ -125,12 +130,7 @@
     .cli-cursor {
       display: inline-block;
       animation: blink 1s steps(2, start) infinite;
-      color: #0f0;
-    }
-
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      50.01%, 100% { opacity: 0; }
+      color: var(--cursor-color);
     }
 
     #cmdInput {
@@ -142,7 +142,7 @@
     }
 
     #visibleText {
-      color: #0f0;
+      color: var(--text-color);
       white-space: pre;
     }
 
@@ -150,10 +150,6 @@
       font-family: inherit;
       font-size: inherit;
     }
-
-
-
-
   </style>
 </head>
 <body>
@@ -168,13 +164,89 @@
 
   <script>
   (function(){
+    // Define themes as structured objects
+    const themes = {
+      default: {
+        name: 'Matrix',
+        textColor: '#0f0',
+        backgroundColor: '#000',
+        promptColor: '#0f0',
+        cursorColor: '#0f0'
+      },
+      neon: {
+        name: 'Neon',
+        textColor: '#0ff',
+        backgroundColor: '#000',
+        promptColor: '#0ff',
+        cursorColor: '#0ff'
+      },
+      retro: {
+        name: 'Retro',
+        textColor: '#ff0',
+        backgroundColor: '#003',
+        promptColor: '#ff0',
+        cursorColor: '#ff0'
+      },
+      matrix: {
+        name: 'Matrix',
+        textColor: '#0f0',
+        backgroundColor: '#000',
+        promptColor: '#0f0',
+        cursorColor: '#0f0'
+      },
+      dracula: {
+        name: 'Dracula',
+        textColor: '#f8f8f2',
+        backgroundColor: '#282a36',
+        promptColor: '#ff79c6',
+        cursorColor: '#f8f8f2'
+      },
+      dankos: {
+        name: 'DankOS',
+        textColor: '#0070f3',
+        backgroundColor: '#f8f9fa',
+        promptColor: '#0070f3',
+        cursorColor: '#0070f3'
+      },
+      solarized: {
+        name: 'Solarized',
+        textColor: '#839496',
+        backgroundColor: '#002b36',
+        promptColor: '#cb4b16',
+        cursorColor: '#839496'
+      },
+      monokai: {
+        name: 'Monokai',
+        textColor: '#f8f8f2',
+        backgroundColor: '#272822',
+        promptColor: '#a6e22e',
+        cursorColor: '#f8f8f2'
+      }
+    };
+
+    // Function to apply theme
+    function applyTheme(themeName) {
+      const theme = themes[themeName] || themes.default;
+
+      // Update CSS variables
+      document.documentElement.style.setProperty('--text-color', theme.textColor);
+      document.documentElement.style.setProperty('--background-color', theme.backgroundColor);
+      document.documentElement.style.setProperty('--prompt-color', theme.promptColor);
+      document.documentElement.style.setProperty('--cursor-color', theme.cursorColor);
+
+      // Save theme preference to localStorage
+      localStorage.setItem('preferredTheme', themeName);
+
+      return theme.name;
+    }
+
     const sections = {
       'hero.txt':
         "I specialize in building scalable, user-focused applications across web, mobile, and backend systems. With a solid foundation in full stack development and practical experience integrating machine learning solutions, I deliver high-performance products that meet real-world business needs.",
       'about.txt':
         "I'm a passionate full stack software developer with a strong foundation in building scalable web, mobile, and automation solutions. I integrate cutting-edge machine learning techniques where needed while focusing on end-to-end system design.\nMost recently I worked as an Endpoint Systems Engineer at Harvard University, developing tools that streamlined IT processes and drove operational efficiency.",
       'education.txt':
-        "B.S. in Computer Science – Wentworth Institute of Technology\nMinors: Data Science, Applied Mathematics, Business Analytics, Computer Networking\nGPA: 3.7\nDean’s List: Fall 2022, Spring 2023, Fall 2023, Spring 2024, Fall 2024\nExpected Graduation: August 2026",
+        "B.S. in Computer Science – Wentworth Institute of Technology\nMinors: Data Science, Applied Mathematics, Business Analytics, Computer Networking\nGPA: 3.7\nDean's List: Fall 2022, Spring 2023, Fall 2023, Spring 2024, Fall 2024\nExpected Graduation: August 2026",
       'experience.txt':
         "2025 – Endpoint Systems Engineer Intern – Harvard University:\n  • Designed and implemented a custom Linux monitoring application with both macOS and Windows versions, improving reliability by 30%.\n  • Developed and deployed a Mac device renaming application using Linux and Swift Dialog to enforce naming conventions across Harvard units.\n  • Automated workflows with PowerShell & Unix scripting, boosting provisioning and device management efficiency.\n  • Collaborated with IT Field teams to optimize managed services.\n\n2025 – Director of Technologies – Engineering Hope (Hacking Injustice):\n  • Built scalable digital infrastructure for annual hackathons.\n  • Procured and negotiated licenses for essential tools and platforms.\n  • Led a technical advisory team to mentor students.\n  • Managed full stack development for event management systems.\n\n2024 – Technical Support Engineer Intern – Harvard University:\n  • Deployed secure multi-OS configurations for 2,000+ campus users.\n  • Streamlined support workflows, reducing ticket resolution time.\n  • Reworked onboarding documentation for multiple units.\n  • Trained incoming interns and contractors.\n\n2023–Present – Campus Leadership Roles – Wentworth Institute of Technology:\n  • Vice President, Student Government: Organized initiatives using Agile strategies and a Jira board.\n  • Director of Business Affairs, Student Government: Built a barcode scanner webapp & introduced halal/kosher dining options.\n  • Captain, Sailing Team: Certified US Sailing Level 1; coached team to highest season score since 2019.",
       'skills.txt':
@@ -182,7 +254,7 @@
       'projects.txt':
         "GroceryBarcodeScanner – A scalable microservice for scanning and categorizing retail products using ML (Python, Flask, SQL)\nHUIT_BOT – Conversational NLP chatbot for Harvard IT onboarding (Python, Spacy)\nStock Predictor – CNN‑LSTM model forecasting stock prices with technical indicators (TensorFlow, LSTM, CNN)\nDSPM (Dank's Squash Pie Monitor) – Python GUI for remote Linux monitoring via SSH (macOS/Windows)\nBartender‑GPT – iOS cocktail recommendation app in Swift, live on the App Store",
       'recommendations.txt':
-        "“Jason worked with our Endpoint Systems Management team as a coop. He quickly integrated himself and standardized Mac naming, then coded Windows solutions. He’s a strong team player, inventive problem solver, and excellent programmer. I’m confident he adds value anywhere.”\n– Kurt Levitan, Microsoft Endpoint Architect & Team Lead, Harvard University",
+        "Jason worked with our Endpoint Systems Management team as a coop. He quickly integrated himself and standardized Mac naming, then coded Windows solutions. He's a strong team player, inventive problem solver, and excellent programmer. I'm confident he adds value anywhere.'\n– Kurt Levitan, Microsoft Endpoint Architect & Team Lead, Harvard University'",
       'certifications.txt':
         "Jamf 100\nJamf 170",
       'contact.txt':
@@ -218,7 +290,7 @@
               "    \\/___/  \\/_/\\/_/\\/_/\\/_/\\/_/\\/_/\\/___/  \\/___/ " +
               "".trim());
       print(" ")
-      print("Welcome to Jason Dank’s Portfolio CLI. Type 'help' to see commands or 'exit' to leave.\n")
+      print("Welcome to Jason Dank's Portfolio CLI. Type 'help' to see commands or 'exit' to leave.\n")
     }
 
     function paginate(fileKey) {
@@ -261,8 +333,6 @@
           return;
         }
 
-
-
       switch (cmd) {
         case 'help':
           print(`Commands:
@@ -283,7 +353,7 @@
   date           show current date/time
   history        show command history
   sudo           ??? (try it)
-  theme [name]   switch theme [dracula, neon, retro, matrix, dankos]
+  theme [name]   switch theme [${Object.keys(themes).join(', ')}]
   joke           tell a joke
   help           this menu`);
           break;
@@ -331,7 +401,6 @@
           print(responses[Math.floor(Math.random() * responses.length)]);
           break;
 
-
         case 'date':
           print(new Date().toString());
           break;
@@ -346,34 +415,23 @@
           break;
 
         case 'theme':
-          switch ((args[1] || '').toLowerCase()) {
-            case 'neon':
-              document.body.style.color = '#0ff';
-              document.body.style.backgroundColor = '#000';
-              break;
-            case 'retro':
-              document.body.style.color = '#ff0';
-              document.body.style.backgroundColor = '#003';
-              break;
-            case 'matrix':
-              document.body.style.color = '#0f0';
-              document.body.style.backgroundColor = '#000';
-              break;
-            case 'dracula':
-              document.body.style.color = '#f8f8f2';
-              document.body.style.backgroundColor = '#282a36';
-              break;
-            case 'dankos':
-              document.body.style.color = '#0070f3';
-              document.body.style.backgroundColor = '#f8f9fa';
-              break;
-            default:
-              document.body.style.color = '#0f0';
-              document.body.style.backgroundColor = '#000';
-              break;
+          if (!args[1]) {
+            // No theme specified, show available themes
+            print('Available themes:');
+            print(Object.keys(themes).join(', '));
+            print(`Current theme: ${localStorage.getItem('preferredTheme') || 'default'}`);
+          } else {
+            const requestedTheme = args[1].toLowerCase();
+            if (themes[requestedTheme]) {
+              const themeName = applyTheme(requestedTheme);
+              print(`Theme switched to ${themeName}`);
+            } else {
+              print(`Theme not found: ${args[1]}`);
+              print('Available themes:');
+              print(Object.keys(themes).join(', '));
+            }
           }
           break;
-
 
         case 'joke':
           print("Why do programmers prefer dark mode? Because light attracts bugs!");
@@ -414,43 +472,45 @@
       }
     });
 
+    const cmdInput = document.getElementById('cmdInput');
+    const visibleText = document.getElementById('visibleText');
+
+    function updateVisibleText() {
+      const val = cmdInput.value;
+      const pos = cmdInput.selectionStart ?? val.length;
+
+      const before = val.slice(0, pos);
+      const after = val.slice(pos);
+
+      visibleText.innerHTML = `${escapeHTML(before)}<span class="cli-cursor">_</span>${escapeHTML(after)}`;
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+    }
+
+    cmdInput.addEventListener('input', updateVisibleText);
+    cmdInput.addEventListener('keyup', updateVisibleText);
+    cmdInput.addEventListener('click', updateVisibleText);
+    cmdInput.addEventListener('focus', updateVisibleText);
+
+    // Apply saved theme or default on load
+    const savedTheme = localStorage.getItem('preferredTheme');
+    applyTheme(savedTheme || 'retro');
+
     // startup
     showBanner();
+
+    // Ensure input is focused
+    cmdInput.focus();
+    updateVisibleText();
   })();
-
-  const cmdInput = document.getElementById('cmdInput');
-  const visibleText = document.getElementById('visibleText');
-
-  function updateVisibleText() {
-    const val = cmdInput.value;
-    const pos = cmdInput.selectionStart ?? val.length;
-
-    const before = val.slice(0, pos);
-    const after = val.slice(pos);
-
-    visibleText.innerHTML = `${escapeHTML(before)}<span class="cli-cursor">_</span>${escapeHTML(after)}`;
-  }
-
-  function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, m => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    })[m]);
-  }
-
-  cmdInput.addEventListener('input', updateVisibleText);
-  cmdInput.addEventListener('keyup', updateVisibleText);
-  cmdInput.addEventListener('click', updateVisibleText);
-  cmdInput.addEventListener('focus', updateVisibleText);
-
-  // Trigger it once on load
-  updateVisibleText();
-
-
-
   </script>
 </body>
 </html>
