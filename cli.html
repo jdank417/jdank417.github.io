@@ -217,6 +217,7 @@
               "   \\ \\____/\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\ \\____/\\/\\____/\n" +
               "    \\/___/  \\/_/\\/_/\\/_/\\/_/\\/_/\\/_/\\/___/  \\/___/ " +
               "".trim());
+      print(" ")
       print("Welcome to Jason Dank’s Portfolio CLI. Type 'help' to see commands or 'exit' to leave.\n")
     }
 
@@ -243,7 +244,7 @@
       const args = line.trim().split(/\s+/),
             cmd  = args[0]?.toLowerCase();
 
-        const shortcutSections = ['about', 'education', 'experience', 'skills', 'projects', 'contact', 'recommendations', 'certifications'];
+        const shortcutSections = ['hero', 'about', 'education', 'experience', 'skills', 'projects', 'contact', 'recommendations', 'certifications'];
 
         if (shortcutSections.includes(cmd)) {
           // Send scroll request to parent
@@ -266,6 +267,14 @@
         case 'help':
           print(`Commands:
   ls             list files
+  hero           show hero section
+  about          show about me
+  education      show education
+  experience     show experience
+  skills         show skills
+  projects       show projects
+  certifications show certifications
+  contact        show contact info
   cat [file]     view file
   more [file]    page through file
   clear          clear screen
@@ -274,7 +283,7 @@
   date           show current date/time
   history        show command history
   sudo           ??? (try it)
-  theme [name]   switch color theme
+  theme [name]   switch theme [dracula, neon, retro, matrix]
   joke           tell a joke
   help           this menu`);
           break;
