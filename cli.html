@@ -66,19 +66,97 @@
     ::selection {
       background: rgba(0,255,0,0.3);
     }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    #cmdInput {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #0f0;
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
+      caret-color: transparent; /* hide the native caret */
+    }
+
+    #cmdInput {
+      position: absolute;
+      left: -9999px; /* keeps it offscreen */
+      opacity: 1;         /* allow input */
+      pointer-events: auto;
+    }
+
+
+
+    .cli-cursor {
+      font-weight: bold;
+      margin-left: 2px;
+      animation: blinkCursor 1s steps(2, start) infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 50% {
+        opacity: 1;
+      }
+      50.01%, 100% {
+        opacity: 0;
+      }
+    }
+
+    .cli-cursor {
+      display: inline-block;
+      animation: blink 1s steps(2, start) infinite;
+      color: #0f0;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+
+    #cmdInput {
+      background: none;
+      border: none;
+      color: transparent; /* hide typed text in input */
+      caret-color: transparent;
+      position: absolute;
+    }
+
+    #visibleText {
+      color: #0f0;
+      white-space: pre;
+    }
+
+    .input-line {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+
+
+
   </style>
 </head>
 <body>
   <div id="terminal">
     <div class="input-line">
-      <span class="prompt">&gt; </span>
-      <input type="text" id="cmdInput" autofocus autocomplete="off" />
+        <span class="prompt">&gt; </span>
+        <span id="visibleText"></span>
+        <input type="text" id="cmdInput" autofocus autocomplete="off" />
+      </div>
     </div>
   </div>
 
   <script>
   (function(){
     const sections = {
+      'hero.txt':
+        "I specialize in building scalable, user-focused applications across web, mobile, and backend systems. With a solid foundation in full stack development and practical experience integrating machine learning solutions, I deliver high-performance products that meet real-world business needs.",
       'about.txt':
         "I'm a passionate full stack software developer with a strong foundation in building scalable web, mobile, and automation solutions. I integrate cutting-edge machine learning techniques where needed while focusing on end-to-end system design.\nMost recently I worked as an Endpoint Systems Engineer at Harvard University, developing tools that streamlined IT processes and drove operational efficiency.",
       'education.txt':
@@ -146,6 +224,25 @@
     function execute(line) {
       const args = line.trim().split(/\s+/),
             cmd  = args[0]?.toLowerCase();
+
+        // Shortcut to scroll and print sections if the user types just "about", "skills", etc.
+        const shortcutSections = ['hero', 'about', 'education', 'experience', 'skills', 'projects', 'contact', 'recommendations', 'certifications'];
+
+        if (shortcutSections.includes(cmd)) {
+          // Scroll to section on the main site
+          parent.document.querySelector(`#${cmd}`)?.scrollIntoView({ behavior: 'smooth' });
+
+          // Print matching CLI content (if it exists)
+          let fileKey = cmd + '.txt';
+          if (sections[fileKey]) {
+            print('> ' + cmd, true);
+            print(sections[fileKey]);
+          } else {
+            print(`No CLI summary available for section "${cmd}"`);
+          }
+          return; // Stop here — don't run the switch(cmd)
+        }
+
 
       switch (cmd) {
         case 'help':
@@ -290,6 +387,40 @@
     // startup
     showBanner();
   })();
+
+  const cmdInput = document.getElementById('cmdInput');
+  const visibleText = document.getElementById('visibleText');
+
+  function updateVisibleText() {
+    const val = cmdInput.value;
+    const pos = cmdInput.selectionStart ?? val.length;
+
+    const before = val.slice(0, pos);
+    const after = val.slice(pos);
+
+    visibleText.innerHTML = `${escapeHTML(before)}<span class="cli-cursor">_</span>${escapeHTML(after)}`;
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, m => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[m]);
+  }
+
+  cmdInput.addEventListener('input', updateVisibleText);
+  cmdInput.addEventListener('keyup', updateVisibleText);
+  cmdInput.addEventListener('click', updateVisibleText);
+  cmdInput.addEventListener('focus', updateVisibleText);
+
+  // Trigger it once on load
+  updateVisibleText();
+
+
+
   </script>
 </body>
 </html>
