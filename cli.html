@@ -113,13 +113,13 @@
     }
 
     function showBanner() {
-      print(" ____    ______  __  __  __  __     \n" +
-              "/\\  _`\\ /\\  _  \\/\\ \\/\\ \\/\\ \\/\\ \\    \n" +
-              "\\ \\ \\/\\ \\ \\ \\L\\ \\ \\ `\\\\ \\ \\ \\/'/'   \n" +
-              " \\ \\ \\ \\ \\ \\  __ \\ \\ , ` \\ \\ , <    \n" +
-              "  \\ \\ \\_\\ \\ \\ \\/\\ \\ \\ \\`\\ \\ \\ \\\\`\\  \n" +
-              "   \\ \\____/\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\\n" +
-              "    \\/___/  \\/_/\\/_/\\/_/\\/_/\\/_/\\/_/" +
+      print(" ____    ______  __  __  __  __                    \n" +
+              "/\\  _`\\ /\\  _  \\/\\ \\/\\ \\/\\ \\/\\ \\                   \n" +
+              "\\ \\ \\/\\ \\ \\ \\L\\ \\ \\ `\\\\ \\ \\ \\/'/'    ___     ____  \n" +
+              " \\ \\ \\ \\ \\ \\  __ \\ \\ , ` \\ \\ , <    / __`\\  /',__\\ \n" +
+              "  \\ \\ \\_\\ \\ \\ \\/\\ \\ \\ \\`\\ \\ \\ \\\\`\\ /\\ \\L\\ \\/\\__, `\\\n" +
+              "   \\ \\____/\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\ \\_\\ \\____/\\/\\____/\n" +
+              "    \\/___/  \\/_/\\/_/\\/_/\\/_/\\/_/\\/_/\\/___/  \\/___/ " +
               "".trim());
       print("Welcome to Jason Dank’s Portfolio CLI. Type 'help' to see commands or 'exit' to leave.\n")
     }
@@ -194,8 +194,19 @@
           break;
 
         case 'whoami':
-          print('jdank417');
+          const responses = [
+            "You are a decision-maker. A talent-sourcer. A bringer of opportunity.",
+            "You are someone with a keen eye for great developers. 😉",
+            "You are a recruiter, manager, or just someone who appreciates good CLI design.",
+            "You're probably here to find your next great hire. (Hi 👋)",
+            "You are... someone with excellent taste in portfolios.",
+            "You're here because resumes are boring and terminals are not.",
+            "You are someone who knows great software when they see it.",
+            "A future collaborator? A curious tech lead? Either way — welcome!"
+          ];
+          print(responses[Math.floor(Math.random() * responses.length)]);
           break;
+
 
         case 'date':
           print(new Date().toString());
