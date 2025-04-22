@@ -1326,12 +1326,12 @@
 
   </style>
 </head>
-<body>
+<body class="cli-open">
 <div id="siteContent">
 
 
     <!-- CLI Sidebar -->
-  <div id="cli-sidebar">
+  <div id="cli-sidebar" class="open">
     <iframe src="cli.html" title="Portfolio CLI"></iframe>
     <!-- drag this to resize -->
     <div id="cli-resizer"></div>
@@ -1394,7 +1394,7 @@
   ">
     <i class="fas fa-terminal" style="margin-right: 8px;"></i>
     CLI
-    <input type="checkbox" id="cli-toggle-switch" style="display: none;" />
+    <input type="checkbox" id="cli-toggle-switch" checked style="display: none;" />
     <span style="
       margin-left: 12px;
       position: relative;
@@ -1414,6 +1414,7 @@
         background: #fff;
         border-radius: 50%;
         transition: transform 0.3s ease;
+        transform: translateX(20px);
       "></span>
     </span>
   </label>
@@ -2025,6 +2026,15 @@ document.addEventListener('pointerup', e => {
   resizer.releasePointerCapture(e.pointerId);
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  // Close CLI by default on mobile
+  if (window.innerWidth < 1024) {
+    document.body.classList.remove('cli-open');
+    document.getElementById('cli-sidebar')?.classList.remove('open');
+    document.getElementById('cli-toggle-switch').checked = false;
+    document.getElementById('cli-thumb').style.transform = 'translateX(0)';
+  }
+});
 
 
 
