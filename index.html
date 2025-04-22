@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <style>
     :root {
-      --cli-width: 360px;
+      --cli-width: 550px;
     }
     /* … */
     #cli-sidebar {
@@ -1274,6 +1274,10 @@
       z-index: 1500;
       overflow: hidden;
     }
+    #cli-resizer {
+      display: none !important;
+    }
+
     #cli-sidebar.open {
       transform: translateX(0);      /* ← slide it back in */
     }
@@ -1311,11 +1315,19 @@
     color: var(--primary-hover);
   }
 
+  /* When CLI is open on desktop, shift site content */
+  @media (min-width: 1024px) {
+    body.cli-open #siteContent {
+      margin-left: var(--cli-width);
+      transition: margin-left 0.3s ease;
+    }
+  }
 
 
   </style>
 </head>
 <body>
+<div id="siteContent">
 
 
     <!-- CLI Sidebar -->
@@ -1863,6 +1875,7 @@
     <i class="fas fa-arrow-up"></i>
   </a>
 
+  </div>
 
 
   <script>
@@ -1916,6 +1929,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cliSwitch?.addEventListener('change', () => {
     const isOpen = cliSwitch.checked;
     sidebar?.classList.toggle('open', isOpen);
+    document.body.classList.toggle('cli-open', isOpen);
     cliThumb?.style.setProperty('transform', isOpen ? 'translateX(20px)' : 'translateX(0)');
   });
 
