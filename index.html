@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jason Dank – Portfolio</title>
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
   <!-- Google Fonts & External Libraries -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -833,41 +835,418 @@
     /* CERTIFICATIONS SECTION */
     #certifications {
       background: var(--background-color);
-      padding: 7rem 0;
+      padding: 5rem 0;
     }
     #certifications .container {
       text-align: center;
+      max-width: 1000px;
     }
     #certifications .section-title {
+      margin-bottom: 1.5rem;
+    }
+    #certifications .section-subtitle {
       margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .certifications-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
       justify-content: center;
     }
     .certification-item {
-      /* Adjust sizing as needed */
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .certification-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    .certification-item div[data-iframe-width] {
+      max-width: 100%;
+      height: auto;
+    }
+    .certification-title {
+      margin-top: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-color);
+      text-align: center;
     }
 
-    /* CONTACT SECTION */
-    .contact-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+    /* CONTACT SECTION - CODE EDITOR STYLE */
+    /* Code Editor Container */
+    .code-editor {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      margin: 2rem auto;
+      max-width: 1000px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      height: 600px;
+    }
+
+    /* File Explorer */
+    .file-explorer {
+      width: 220px;
+      background: var(--light-gray);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .explorer-header {
+      padding: 0.8rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-color);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .explorer-header i {
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .explorer-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+
+    .explorer-section {
+      margin-bottom: 1rem;
+    }
+
+    .explorer-section-title {
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--light-text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .explorer-item {
+      padding: 0.4rem 1rem 0.4rem 2rem;
+      font-size: 0.85rem;
+      color: var(--text-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .explorer-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .explorer-item.active {
+      background: rgba(0, 112, 243, 0.1);
+      color: var(--primary-color);
+    }
+
+    .explorer-item i {
+      font-size: 0.8rem;
+      color: var(--light-text);
+    }
+
+    /* Main Editor Area */
+    .editor-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Editor Toolbar */
+    .editor-toolbar {
+      display: flex;
+      background: var(--light-gray);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 0.3rem 0.8rem;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .toolbar-item {
+      font-size: 0.8rem;
+      color: var(--text-color);
+      cursor: pointer;
+      padding: 0.3rem 0.5rem;
+      border-radius: 3px;
+    }
+
+    .toolbar-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .toolbar-separator {
+      width: 1px;
+      height: 1rem;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Editor Tabs */
+    .editor-tabs {
+      display: flex;
+      background: var(--light-gray);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .editor-tab {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .editor-tab.active {
+      background: var(--card-bg);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .editor-tab i {
+      font-size: 0.8rem;
+    }
+
+    .editor-tab .close-tab {
+      margin-left: 0.5rem;
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
+
+    .editor-tab:hover .close-tab {
+      opacity: 1;
+    }
+
+    /* Editor Content */
+    .editor-content {
+      display: flex;
+      background: var(--card-bg);
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      flex: 1;
+    }
+
+    .line-numbers {
+      padding: 1rem 0.5rem;
+      text-align: right;
+      color: var(--light-text);
+      background: var(--light-gray);
+      user-select: none;
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      min-width: 40px;
+    }
+
+    .line-numbers span {
+      display: block;
+      font-size: 0.8rem;
+    }
+
+    .code-content {
+      padding: 1rem;
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    .code-content pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    .code-content code {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      color: var(--text-color);
+    }
+
+    /* Syntax Highlighting */
+    .code-content .comment { color: #6a9955; }
+    .code-content .keyword { color: #569cd6; }
+    .code-content .string { color: #ce9178; }
+    .code-content .function { color: #dcdcaa; }
+    .code-content .variable { color: #9cdcfe; }
+    .code-content .class { color: #4ec9b0; }
+
+    /* Editor Controls */
+    .editor-controls {
+      padding: 0.6rem 1rem;
+      background: var(--light-gray);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
       align-items: center;
     }
+
+    .editor-controls .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .editor-controls .btn i {
+      font-size: 0.8rem;
+    }
+
+    .editor-status {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--light-text);
+    }
+
+    .editor-status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Console Output */
+    .console-output {
+      background: #1e1e1e;
+      color: #dcdcaa;
+      border-top: 1px solid rgba(0, 0, 0, 0.2);
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .console-header {
+      padding: 0.5rem 1rem;
+      background: #2d2d2d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .console-header button {
+      background: none;
+      border: none;
+      color: #dcdcaa;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+    }
+
+    .console-header button:hover {
+      text-decoration: underline;
+    }
+
+    .console-content {
+      padding: 1rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .console-placeholder {
+      color: #6a9955;
+      font-style: italic;
+    }
+
+    .console-line {
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .console-line.error {
+      color: #f14c4c;
+    }
+
+    .console-line a {
+      color: #4ec9b0;
+      text-decoration: underline;
+    }
+
+    /* Responsive adjustments for code editor */
+    @media (max-width: 992px) {
+      .code-editor {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .file-explorer {
+        width: 100%;
+        height: 200px;
+      }
+
+      .editor-content {
+        min-height: 300px;
+      }
+
+      .console-output {
+        height: 150px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .code-editor {
+        font-size: 0.8rem;
+      }
+
+      .line-numbers {
+        padding: 1rem 0.3rem;
+      }
+
+      .editor-tab {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      .editor-toolbar {
+        display: none;
+      }
+    }
+
+    /* Original contact styles for reference */
+    .contact-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
     .contact-info {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
+
     .contact-item {
       display: flex;
       align-items: flex-start;
       gap: 1rem;
     }
+
     .contact-icon {
       width: 50px;
       height: 50px;
@@ -880,34 +1259,15 @@
       color: var(--primary-color);
       flex-shrink: 0;
     }
+
     .contact-details h4 {
       font-size: 1.2rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
+
     .contact-details p {
       color: var(--light-text);
-    }
-    .contact-form {
-      width: 100%;
-    }
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    .form-control {
-      width: 100%;
-      padding: 1rem;
-      border: 1px solid transparent;
-      border-radius: 10px;
-      background: var(--light-gray);
-      font-size: 1rem;
-      color: var(--text-color);
-      transition: var(--transition);
-    }
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.1);
     }
     .form-control::placeholder {
       color: #999;
@@ -1751,12 +2111,17 @@
   <section id="certifications" class="section-padding">
     <div class="container">
       <h2 class="section-title">Certifications</h2>
+      <p class="section-subtitle">Professional certifications and credentials that validate my technical expertise and knowledge.</p>
       <div class="certifications-container">
         <div class="certification-item">
-          <div data-iframe-width="500" data-iframe-height="500" data-share-badge-id="992f9097-6f64-4d9d-8e86-1091323b05ae" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="250" data-iframe-height="250" data-share-badge-id="992f9097-6f64-4d9d-8e86-1091323b05ae" data-share-badge-host="https://www.credly.com"></div>
+          <h3 class="certification-title">Jamf Certified Associate - Jamf Protect
+</h3>
         </div>
         <div class="certification-item">
-          <div data-iframe-width="500" data-iframe-height="500" data-share-badge-id="e5fd2530-7870-4762-9f30-2c537853b165" data-share-badge-host="https://www.credly.com"></div>
+          <div data-iframe-width="250" data-iframe-height="250" data-share-badge-id="e5fd2530-7870-4762-9f30-2c537853b165" data-share-badge-host="https://www.credly.com"></div>
+          <h3 class="certification-title">Jamf Certified Associate - Jamf Pro
+</h3>
         </div>
       </div>
       <!-- Include the Credly embed script once -->
@@ -1791,43 +2156,147 @@
   <section id="contact" class="section-padding">
     <div class="container">
       <h2 class="section-title">Get In Touch</h2>
-      <p class="section-subtitle">Have a project in mind or want to collaborate? Let's connect!</p>
-      <div class="contact-container">
-        <div class="contact-info fade-in">
-          <div class="contact-item">
-            <div class="contact-icon">
-              <i class="fas fa-envelope"></i>
-            </div>
-            <div class="contact-details">
-              <h4>Email</h4>
-              <p><a href="mailto:jasondank@yahoo.com">jasondank@yahoo.com</a></p>
+      <p class="section-subtitle">Run the code to see my contact information!</p>
+
+      <!-- Code Editor Interface -->
+      <div class="code-editor fade-in">
+        <!-- File Explorer -->
+        <div class="file-explorer">
+          <div class="explorer-header">
+            EXPLORER <i class="fas fa-ellipsis-h"></i>
+          </div>
+          <div class="explorer-content">
+            <div class="explorer-section">
+              <div class="explorer-section-title">PORTFOLIO</div>
+              <div class="explorer-item">
+                <i class="far fa-folder-open"></i> src
+              </div>
+              <div class="explorer-item">
+                <i class="far fa-folder"></i> assets
+              </div>
+              <div class="explorer-item">
+                <i class="far fa-folder"></i> components
+              </div>
+              <div class="explorer-item active">
+                <i class="far fa-file-code"></i> contact.js
+              </div>
+              <div class="explorer-item">
+                <i class="far fa-file-code"></i> about.js
+              </div>
+              <div class="explorer-item">
+                <i class="far fa-file-code"></i> projects.js
+              </div>
+              <div class="explorer-item">
+                <i class="far fa-file"></i> README.md
+              </div>
             </div>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon">
-              <i class="fas fa-map-marker-alt"></i>
-            </div>
-            <div class="contact-details">
-              <h4>Location</h4>
-              <p>Boston, Massachusetts</p>
+        </div>
+
+        <!-- Main Editor Area -->
+        <div class="editor-main">
+          <!-- Editor Toolbar -->
+          <div class="editor-toolbar">
+            <div class="toolbar-item">File</div>
+            <div class="toolbar-item">Edit</div>
+            <div class="toolbar-item">View</div>
+            <div class="toolbar-item">Run</div>
+            <div class="toolbar-item">Terminal</div>
+            <div class="toolbar-item">Help</div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-item"><i class="fas fa-save"></i></div>
+            <div class="toolbar-item"><i class="fas fa-undo"></i></div>
+            <div class="toolbar-item"><i class="fas fa-redo"></i></div>
+          </div>
+
+          <!-- Editor Tabs -->
+          <div class="editor-tabs">
+            <div class="editor-tab active">
+              <i class="fab fa-js"></i> contact.js <span class="close-tab">×</span>
             </div>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon">
-              <i class="fab fa-linkedin-in"></i>
+
+          <!-- Editor Content -->
+          <div class="editor-content">
+            <div class="line-numbers">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+              <span>7</span>
+              <span>8</span>
+              <span>9</span>
+              <span>10</span>
+              <span>11</span>
+              <span>12</span>
+              <span>13</span>
+              <span>14</span>
+              <span>15</span>
+              <span>16</span>
+              <span>17</span>
+              <span>18</span>
+              <span>19</span>
+              <span>20</span>
             </div>
-            <div class="contact-details">
-              <h4>LinkedIn</h4>
-              <p><a href="https://www.linkedin.com/in/jason-dank" target="_blank">linkedin.com/in/jason-dank</a></p>
+            <div class="code-content">
+              <pre><code>/**
+ * Contact Information
+ * Run this code to display my contact details
+ */
+class ContactInfo {
+  constructor() {
+    this.name = "Jason Dank";
+    this.email = "jasondank@yahoo.com";
+    this.location = "Boston, Massachusetts";
+    this.linkedin = "linkedin.com/in/jason-dank";
+    this.github = "github.com/jdank417";
+  }
+
+  displayContactInfo() {
+    console.log(`Name: ${this.name}`);
+    console.log(`Email: ${this.email}`);
+    console.log(`Location: ${this.location}`);
+    console.log(`LinkedIn: ${this.linkedin}`);
+    console.log(`GitHub: ${this.github}`);
+  }
+}
+
+const myContact = new ContactInfo();
+myContact.displayContactInfo();</code></pre>
             </div>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon">
-              <i class="fab fa-github"></i>
+
+          <!-- Editor Controls -->
+          <div class="editor-controls">
+            <button id="run-code-btn" class="btn btn-primary">
+              <i class="fas fa-play"></i> Run Code
+            </button>
+            <div class="editor-status">
+              <div class="editor-status-item">
+                <i class="fas fa-check-circle"></i> Ready
+              </div>
+              <div class="editor-status-item">
+                <i class="fas fa-code-branch"></i> main
+              </div>
+              <div class="editor-status-item">
+                JavaScript
+              </div>
+              <div class="editor-status-item">
+                UTF-8
+              </div>
             </div>
-            <div class="contact-details">
-              <h4>GitHub</h4>
-              <p><a href="https://github.com/jdank417" target="_blank">github.com/jdank417</a></p>
+          </div>
+
+          <!-- Console Output -->
+          <div class="console-output" id="console-output">
+            <div class="console-header">
+              <span>Terminal: bash</span>
+              <button id="clear-console-btn">Clear</button>
+            </div>
+            <div class="console-content" id="console-content">
+              <div class="console-placeholder">Click "Run Code" to see the output</div>
             </div>
           </div>
         </div>
@@ -1895,6 +2364,91 @@
   <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Everything below this happens AFTER the DOM is ready
+
+  // Code Editor Functionality
+  const runCodeBtn = document.getElementById('run-code-btn');
+  const clearConsoleBtn = document.getElementById('clear-console-btn');
+  const consoleContent = document.getElementById('console-content');
+
+  if (runCodeBtn && consoleContent) {
+    // Run Code button click handler
+    runCodeBtn.addEventListener('click', () => {
+      // Clear previous output
+      consoleContent.innerHTML = '';
+
+      // Add typing animation effect
+      const lines = [
+        'Name: Jason Dank',
+        'Email: jasondank@yahoo.com',
+        'Location: Boston, Massachusetts',
+        'LinkedIn: linkedin.com/in/jason-dank',
+        'GitHub: github.com/jdank417'
+      ];
+
+      // Simulate console.log output with typing effect
+      let delay = 0;
+      lines.forEach((line, index) => {
+        setTimeout(() => {
+          const consoleLineEl = document.createElement('div');
+          consoleLineEl.className = 'console-line';
+
+          // Create links for email, LinkedIn, and GitHub
+          if (line.includes('Email:')) {
+            const parts = line.split(': ');
+            consoleLineEl.innerHTML = `${parts[0]}: <a href="mailto:${parts[1]}">${parts[1]}</a>`;
+          } else if (line.includes('LinkedIn:')) {
+            const parts = line.split(': ');
+            consoleLineEl.innerHTML = `${parts[0]}: <a href="https://www.${parts[1]}" target="_blank">${parts[1]}</a>`;
+          } else if (line.includes('GitHub:')) {
+            const parts = line.split(': ');
+            consoleLineEl.innerHTML = `${parts[0]}: <a href="https://${parts[1]}" target="_blank">${parts[1]}</a>`;
+          } else {
+            consoleLineEl.textContent = line;
+          }
+
+          consoleContent.appendChild(consoleLineEl);
+
+          // Auto-scroll to bottom
+          consoleContent.scrollTop = consoleContent.scrollHeight;
+        }, delay);
+
+        // Increase delay for each line to simulate typing
+        delay += 300;
+      });
+    });
+  }
+
+  if (clearConsoleBtn && consoleContent) {
+    // Clear Console button click handler
+    clearConsoleBtn.addEventListener('click', () => {
+      consoleContent.innerHTML = '<div class="console-placeholder">Console cleared. Click "Run Code" to see the output</div>';
+    });
+  }
+
+  // Apply syntax highlighting to the code
+  const codeElement = document.querySelector('.code-content code');
+  if (codeElement) {
+    const codeText = codeElement.innerHTML;
+
+    // Simple syntax highlighting
+    const highlightedCode = codeText
+      // Comments
+      .replace(/\/\*\*[\s\S]*?\*\//g, match => `<span class="comment">${match}</span>`)
+      // Keywords
+      .replace(/\b(class|constructor|const|this|new)\b/g, match => `<span class="keyword">${match}</span>`)
+      // Strings
+      .replace(/"([^"]*)"/g, match => `<span class="string">${match}</span>`)
+      // Template literals
+      .replace(/`([^`]*)`/g, match => `<span class="string">${match}</span>`)
+      // Functions
+      .replace(/\b(displayContactInfo|console\.log)\b/g, match => `<span class="function">${match}</span>`)
+      // Variables and properties
+      .replace(/\b(name|email|location|linkedin|github|myContact)\b/g, match => `<span class="variable">${match}</span>`)
+      // Classes
+      .replace(/\b(ContactInfo)\b/g, match => `<span class="class">${match}</span>`);
+
+    codeElement.innerHTML = highlightedCode;
+  }
 
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = themeToggleBtn?.querySelector('i');
