@@ -16,7 +16,7 @@
     :root {
       --cli-width: 550px;
     }
-    /* … */
+
     #cli-sidebar {
       width: var(--cli-width);
       /* remove the old hard‑coded 360px */
@@ -51,6 +51,9 @@
       --background-color: #fff;
       --light-gray: #f8f9fa;
       --card-bg: #fff;
+      --term-bg:   #ffffff;   /* light-mode console background  */
+      --term-text: #1e1e1e;   /* light-mode console text colour */
+      --term-head: #f2f2f2;   /* light-mode header strip        */
       --border-radius: 12px;
       --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
       --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -65,8 +68,12 @@
       --background-color: #121212;
       --light-gray: #1e1e1e;
       --card-bg: #2d2d2d;
+      --term-bg:   #1e1e1e;   /* dark-mode console background  */
+      --term-text: #dcdcaa;   /* dark-mode console text colour */
+      --term-head: #2d2d2d;   /* dark-mode header strip        */
       --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
+
 
     /* RESET */
     *, *::before, *::after {
@@ -1130,8 +1137,8 @@
 
     /* Console Output */
     .console-output {
-      background: #1e1e1e;
-      color: #dcdcaa;
+      background: var(--term-bg);
+      color:      var(--term-text);
       border-top: 1px solid rgba(0, 0, 0, 0.2);
       height: 180px;
       display: flex;
@@ -1227,6 +1234,13 @@
         display: none;
       }
     }
+
+    /* Light-mode fix: keep the terminal header light instead of black */
+    html:not([data-theme="dark"]) .console-header {
+      background: #f5f5f5;   /* match the rest of the light IDE chrome */
+      color: #333;           /* readable dark text                     */
+    }
+
 
     /* Original contact styles for reference */
     .contact-container {
