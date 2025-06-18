@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <style>
     :root {
       --cli-width: 550px;
@@ -1915,14 +1914,15 @@
   <section id="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
-      <h5 class="hero-subtitle">Full Stack Software Developer</h5>
-      <h1 class="hero-title">C:\Portfolio\<span>Jason Dank</span>>_</h1>
-      <p class="hero-description">I specialize in building scalable, user-focused applications across web, mobile, and backend systems. With a solid foundation in full stack development and practical experience integrating machine learning solutions, I deliver high-performance products that meet real-world business needs.</p>
-      <div class="hero-cta">
-        <a href="#projects" class="btn btn-primary">
-          View My Work <i class="fas fa-arrow-right btn-icon"></i>
-        </a>
-        <a href="#contact" class="btn btn-outline">Get In Touch</a>
+      <div class="hero-text-container">
+        <h1 class="hero-title" style="margin: 2rem 0 1rem; text-align: left; width: 100%;">Hello World, I'm <span>Jason Dank</span>.</h1>
+        <div id="rotating-text-container" style="margin-bottom: 3.5rem; margin-top: 1.5rem; height: 6.5rem; position: relative; overflow: hidden; text-align: left; width: 100%;"></div>
+        <div class="hero-cta" style="align-self: flex-start;">
+          <a href="#projects" class="btn btn-primary">
+            View My Work <i class="fas fa-arrow-right btn-icon"></i>
+          </a>
+          <a href="#contact" class="btn btn-outline">Get In Touch</a>
+        </div>
       </div>
     </div>
     <a href="#about" class="scroll-down">
@@ -2142,6 +2142,24 @@
         <button class="filter-button" data-filter="automation">Automation</button>
       </div>
       <div class="portfolio-grid">
+        <!-- Project: Laptop Server Infrastructure -->
+        <div class="portfolio-item fade-in" data-category="automation">
+          <img class="portfolio-thumb" src="winbox.png" alt="Enterprise WSL2 Server Infrastructure">
+          <div class="portfolio-info">
+            <div class="portfolio-tags">
+              <span class="portfolio-tag">WSL2</span>
+              <span class="portfolio-tag">Windows</span>
+              <span class="portfolio-tag">Ubuntu</span>
+              <span class="portfolio-tag">CUDA</span>
+              <span class="portfolio-tag">Tailscale</span>
+            </div>
+            <h3 class="portfolio-title">WSL2 Server Infrastructure with GPU Acceleration</h3>
+            <p class="portfolio-description">Systematic transformation of an HP ZBook Fury laptop into a robust, always-on home server infrastructure. Solved critical challenges including WSL2's idle shutdown behavior, secure SSH-over-Tailscale connectivity, and GPU passthrough configuration for CUDA workloads.</p>
+            <div class="portfolio-links">
+              <a href="https://drive.google.com/file/d/1kRTeivItPW3HBvMCnBD8cd3wxtmspbez/view?usp=sharing" class="portfolio-link">View Details <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
         <!-- Project 1: GroceryBarcodeScanner -->
         <div class="portfolio-item fade-in" data-category="web">
           <img class="portfolio-thumb" src="img.png" alt="Grocery Barcode Scanner">
@@ -2683,15 +2701,99 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Back to top button
+  // Back to top button with throttling for better performance
   const backToTop = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
+
+  // Throttle function to limit how often the scroll handler fires
+  function throttle(callback, delay) {
+    let lastCall = 0;
+    return function() {
+      const now = new Date().getTime();
+      if (now - lastCall >= delay) {
+        lastCall = now;
+        callback.apply(this, arguments);
+      }
+    };
+  }
+
+  // Throttled scroll handler
+  const handleScroll = throttle(() => {
     if (window.pageYOffset > 300) {
       backToTop?.classList.add('show');
     } else {
       backToTop?.classList.remove('show');
     }
-  });
+  }, 100); // Execute at most once every 100ms
+
+  window.addEventListener('scroll', handleScroll);
+
+  // Close CLI by default on mobile (moved from separate DOMContentLoaded listener)
+  if (window.innerWidth < 1024) {
+    document.body.classList.remove('cli-open');
+    document.getElementById('cli-sidebar')?.classList.remove('open');
+    document.getElementById('cli-toggle-switch').checked = false;
+    document.getElementById('cli-thumb').style.transform = 'translateX(0)';
+  }
+
+  // Initialize rotating text (moved from separate DOMContentLoaded listener)
+  const texts = [
+    "Software developer", 
+    "Tech manager", 
+    "Leader", 
+    "Problem solver", 
+    "Innovator",
+    "Full-stack engineer",
+    "UI/UX enthusiast",
+    "System architect",
+    "Code craftsman",
+    "Digital strategist",
+    "Tech visionary",
+    "Automation expert"
+  ];
+
+  const container = document.getElementById('rotating-text-container');
+  if (container) {
+    let currentIndex = 0;
+    let textElement = null;
+    let nextTextElement = null;
+
+    // Create initial text element
+    function createTextElement(text, className) {
+      const element = document.createElement('div');
+      element.className = className;
+      element.textContent = text;
+      return element;
+    }
+
+    // Initialize with first text
+    textElement = createTextElement(texts[currentIndex], 'rotating-text fade-in');
+    container.appendChild(textElement);
+
+    // Function to rotate text
+    function rotateText() {
+      // Remove the old element with animation
+      textElement.classList.remove('fade-in');
+      textElement.classList.add('fade-out');
+
+      // Prepare next index
+      currentIndex = (currentIndex + 1) % texts.length;
+
+      // Create new element
+      nextTextElement = createTextElement(texts[currentIndex], 'rotating-text fade-in');
+
+      // Wait for animation to complete before removing old element
+      setTimeout(() => {
+        container.removeChild(textElement);
+        textElement = nextTextElement;
+      }, 800); // Match animation duration
+
+      // Add new element
+      container.appendChild(nextTextElement);
+    }
+
+    // Set interval for rotation
+    setInterval(rotateText, 3000);
+  }
 });
 
 window.addEventListener('message', e => {
@@ -2750,15 +2852,7 @@ document.addEventListener('pointerup', e => {
   resizer.releasePointerCapture(e.pointerId);
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Close CLI by default on mobile
-  if (window.innerWidth < 1024) {
-    document.body.classList.remove('cli-open');
-    document.getElementById('cli-sidebar')?.classList.remove('open');
-    document.getElementById('cli-toggle-switch').checked = false;
-    document.getElementById('cli-thumb').style.transform = 'translateX(0)';
-  }
-});
+// This code has been moved to the main DOMContentLoaded event listener
 
 // Scroll handler from CLI
 window.addEventListener('message', event => {
@@ -2773,6 +2867,137 @@ window.addEventListener('message', event => {
 
 
 
+</script>
+
+<!-- Lightweight RotatingText implementation -->
+<style>
+  /* Hero text container styles */
+  .hero-text-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rotating-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 3.2rem;
+    min-width: 300px;
+    text-align: left;
+    text-shadow: 0 0 1px var(--primary-color), 0 0 5px rgba(0, 112, 243, 0.3);
+    padding: 0.1rem 0 0.1rem 0;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    /* Enhanced gradient text effect */
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 50%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+
+    /* Animation properties for fade animations */
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+  }
+
+  /* Animation keyframes */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 120%, 0) scale(0.85);
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes fadeOutUp {
+    from {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      filter: blur(0);
+    }
+    to {
+      opacity: 0;
+      transform: translate3d(0, -140%, 0) scale(0.85);
+      filter: blur(10px);
+    }
+  }
+
+  .rotating-text.fade-in {
+    animation-name: fadeInUp;
+  }
+
+  /* Use a different approach for the gradient animation */
+  .rotating-text {
+    background-position: 0% 50%;
+    transition: background-position 0.3s ease;
+  }
+
+  .rotating-text.fade-in:not(.fade-out) {
+    background-position: 100% 50%;
+    transition: background-position 8s ease;
+  }
+
+  .rotating-text.fade-out {
+    animation-name: fadeOutUp;
+  }
+
+  .rotating-text:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 12px rgba(0, 112, 243, 0.6), 0 0 20px rgba(0, 112, 243, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hero-text-container {
+      max-width: 90%;
+    }
+
+    .rotating-text {
+      font-size: 2.5rem;
+    }
+
+    #rotating-text-container {
+      height: 5.5rem;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-text-container {
+      max-width: 95%;
+    }
+
+    .rotating-text {
+      font-size: 2rem;
+    }
+
+    #rotating-text-container {
+      height: 4.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Vanilla JS implementation of RotatingText
+  // This code has been moved to the main DOMContentLoaded event listener
 </script>
 </body>
 </html>
