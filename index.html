@@ -11,29 +11,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap" />
   <style>
     :root {
       --cli-width: 550px;
+      --cli-height: 400px;
     }
 
     #cli-sidebar {
       width: var(--cli-width);
+      height: var(--cli-height);
       /* remove the old hard‑coded 360px */
       min-width: 550px;
+      min-height: 200px;
       max-width: calc(100vw - 100px);
-    }
-    /* push the toggle button based on that same variable */
-    #cli-toggle-btn.open {
-      left: calc(var(--cli-width) + 1rem);
+      max-height: calc(100vh - 100px);
     }
 
-    #cli-resizer {
-      position: absolute;
-      top: 0; right: 0;
-      width: 6px; height: 100%;
-      cursor: ew-resize;
-      z-index: 1601; /* above the sidebar but below the close‑X */
-    }
+    /* Resizer styles are now defined in the .cli-resizer class */
 
     body {
       overflow-x: hidden;
@@ -43,6 +38,7 @@
     /* CSS Variables & Base Styles */
     :root {
       --primary-color: #0070f3;
+      --primary-color-rgb: 0, 112, 243; /* RGB values for primary color */
       --primary-hover: #0058c1;
       --secondary-color: #00c896;
       --text-color: #1d1d1f;
@@ -51,12 +47,25 @@
       --light-gray: #f8f9fa;
       --card-bg: #fff;
       --term-bg:   #ffffff;   /* light-mode console background  */
+      --term-bg-rgb: 255, 255, 255; /* RGB values for light-mode console background */
       --term-text: #1e1e1e;   /* light-mode console text colour */
       --term-head: #f2f2f2;   /* light-mode header strip        */
       --border-radius: 12px;
       --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
       --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       --gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+
+      /* macOS Variables */
+      --macos-bg: url('https://512pixels.net/downloads/macos-wallpapers-thumbs/10-14-Day-Thumb.jpg');
+      --macos-window-bg: #fff;
+      --macos-window-border: rgba(0, 0, 0, 0.2);
+      --macos-toolbar: #f6f6f6;
+      --macos-toolbar-border: #e0e0e0;
+      --macos-dock-bg: rgba(255, 255, 255, 0.2);
+      --macos-dock-border: rgba(255, 255, 255, 0.3);
+      --macos-dock-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      --macos-window-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      --macos-font: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     [data-theme="dark"] {
       --primary-color: #0095ff;
@@ -68,9 +77,21 @@
       --light-gray: #1e1e1e;
       --card-bg: #2d2d2d;
       --term-bg:   #1e1e1e;   /* dark-mode console background  */
+      --term-bg-rgb: 30, 30, 30; /* RGB values for dark-mode console background */
       --term-text: #dcdcaa;   /* dark-mode console text colour */
       --term-head: #2d2d2d;   /* dark-mode header strip        */
       --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+      /* macOS Dark Mode Variables */
+      --macos-bg: url('https://512pixels.net/downloads/macos-wallpapers-thumbs/10-14-Night-Thumb.jpg');
+      --macos-window-bg: #2d2d2d;
+      --macos-window-border: rgba(0, 0, 0, 0.5);
+      --macos-toolbar: #333;
+      --macos-toolbar-border: #444;
+      --macos-dock-bg: rgba(50, 50, 50, 0.7);
+      --macos-dock-border: rgba(255, 255, 255, 0.1);
+      --macos-dock-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      --macos-window-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
 
@@ -81,14 +102,216 @@
       box-sizing: border-box;
     }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: var(--macos-font);
       color: var(--text-color);
-      background: var(--background-color);
+      background: var(--macos-bg);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       line-height: 1.7;
       scroll-behavior: smooth;
       font-weight: 400;
-      overflow-x: hidden;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
       transition: var(--transition);
+      position: relative;
+    }
+
+    /* macOS Desktop Styles */
+    .macos-desktop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    /* macOS Menu Bar */
+    .macos-menubar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 24px;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+      font-size: 13px;
+      color: #333;
+    }
+
+    [data-theme="dark"] .macos-menubar {
+      background-color: rgba(40, 40, 40, 0.8);
+      color: #eee;
+    }
+
+    .macos-menubar-item {
+      margin-right: 18px;
+      font-weight: 500;
+    }
+
+    .macos-menubar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* macOS Dock */
+    .macos-dock {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      background-color: var(--macos-dock-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 18px;
+      box-shadow: var(--macos-dock-shadow);
+      border: 1px solid var(--macos-dock-border);
+      z-index: 9998;
+    }
+
+    .dock-item {
+      width: 50px;
+      height: 50px;
+      margin: 0 5px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      cursor: pointer;
+    }
+
+    .dock-item:hover {
+      transform: scale(1.1) translateY(-5px);
+    }
+
+    .dock-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dock-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+    }
+
+    /* Portfolio Window */
+    .safari-window {
+      position: fixed;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90vw;
+      height: calc(100vh - 130px);
+      background-color: var(--macos-window-bg);
+      border-radius: 10px;
+      box-shadow: var(--macos-window-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      border: 1px solid var(--macos-window-border);
+    }
+
+    .safari-titlebar {
+      height: 38px;
+      background-color: var(--macos-toolbar);
+      border-bottom: 1px solid var(--macos-toolbar-border);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      user-select: none;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .safari-traffic-lights {
+      display: flex;
+      gap: 8px;
+      margin-right: 12px;
+    }
+
+    .safari-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .safari-close {
+      background-color: #ff5f56;
+      cursor: pointer;
+    }
+
+    .safari-minimize {
+      background-color: #ffbd2e;
+      cursor: pointer;
+    }
+
+    .safari-maximize {
+      background-color: #27c93f;
+      cursor: pointer;
+    }
+
+    .safari-toolbar {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .safari-nav-buttons {
+      display: flex;
+      gap: 10px;
+      margin-right: 10px;
+    }
+
+    .safari-nav-btn {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .safari-address-bar {
+      flex: 1;
+      height: 28px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    [data-theme="dark"] .safari-address-bar {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #bbb;
+    }
+
+    .safari-content {
+      flex: 1;
+      overflow-y: auto;
+      background-color: var(--background-color);
     }
     a {
       color: inherit;
@@ -311,6 +534,7 @@
       top: 0;
       right: -300px;
       height: 100vh;
+      max-height: 100vh; /* Ensure it doesn't exceed viewport height */
       width: 280px;
       background: var(--background-color);
       box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
@@ -319,6 +543,7 @@
       display: flex;
       flex-direction: column;
       padding: 2rem;
+      overflow-y: auto; /* Enable scrolling for the entire menu */
     }
     .mobile-nav.active {
       right: 0;
@@ -327,7 +552,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 0;
+      background: var(--background-color);
+      z-index: 2; /* Higher than socials */
+      padding-bottom: 10px;
+      padding-top: 5px;
     }
     .mobile-nav-close {
       background: none;
@@ -339,6 +570,9 @@
     .mobile-nav ul {
       list-style: none;
       margin-top: 1rem;
+      overflow-y: auto; /* Enable scrolling for the list */
+      max-height: calc(100vh - 200px); /* Allow space for header and socials */
+      padding-right: 10px; /* Add padding for scrollbar */
     }
     .mobile-nav li {
       margin-bottom: 1.2rem;
@@ -355,9 +589,14 @@
       transform: translateX(5px);
     }
     .mobile-nav-socials {
-      margin-top: auto;
+      margin-top: 1rem; /* Fixed margin instead of auto to prevent layout issues */
       display: flex;
       gap: 1rem;
+      padding-bottom: 10px; /* Add padding at the bottom */
+      position: sticky; /* Keep it visible when scrolling */
+      bottom: 0;
+      background: var(--background-color); /* Match the menu background */
+      z-index: 1; /* Ensure it's above the content when sticky */
     }
     .mobile-nav-socials a {
       width: 40px;
@@ -1520,6 +1759,21 @@
         grid-template-columns: 1fr;
         gap: 2rem;
       }
+
+      /* Improve menu bar scaling for small screens */
+      .macos-menubar {
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      .macos-menubar-item {
+        margin-right: 12px;
+        font-size: 12px;
+      }
+
+      .macos-menubar-right {
+        gap: 8px;
+      }
     }
     @media (max-width: 576px) {
       .hero-title {
@@ -1539,6 +1793,51 @@
       }
       .btn {
         width: 100%;
+      }
+
+      /* Improve mobile navigation for very small screens */
+      .mobile-nav {
+        padding: 1rem;
+      }
+      .mobile-nav ul {
+        max-height: calc(100vh - 150px); /* Adjust for smaller header and socials */
+      }
+      .mobile-nav li {
+        margin-bottom: 0.8rem; /* Reduce spacing between items */
+      }
+      .mobile-nav-header {
+        margin-bottom: 0.5rem; /* Reduce spacing */
+      }
+
+      /* Further improve menu bar scaling for very small screens */
+      .macos-menubar {
+        padding: 0 8px;
+        height: 22px;
+      }
+
+      .macos-menubar-item {
+        margin-right: 8px;
+        font-size: 11px;
+      }
+
+      .macos-menubar-right {
+        gap: 6px;
+      }
+
+      /* Hide less important menu items on very small screens */
+      .macos-menubar-item:nth-child(n+5):nth-child(-n+7) {
+        display: none;
+      }
+
+      /* Adjust dock size for small screens */
+      .macos-dock {
+        padding: 4px;
+      }
+
+      .dock-item {
+        width: 40px;
+        height: 40px;
+        margin: 0 3px;
       }
     }
     /* === Side‑menu fixes === */
@@ -1639,65 +1938,294 @@
       margin-left:0 !important;
     }
 
-    /* CLI SIDEBAR */
+    /* macOS Dock */
+    .macos-dock {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 18px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      z-index: 9998;
+    }
+
+    .dock-item {
+      width: 50px;
+      height: 50px;
+      margin: 0 5px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      cursor: pointer;
+    }
+
+    .dock-item:hover {
+      transform: scale(1.1) translateY(-5px);
+    }
+
+    .dock-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dock-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+    }
+
+    /* CLI Window - macOS Terminal Style */
     #cli-sidebar {
       position: fixed;
-      top: 0;
-      left: 0;           /* ← now anchored to the left edge */
-      right: auto;       /* ← remove the right setting */
-      width: var(--cli-width);    /* ← use the CSS variable */
-      height: 100%;
-      background: #000;
-      transform: translateX(-100%);  /* ← hide it off‑screen to the left */
-      transition: transform 0.3s ease;
-      z-index: 1500;
+      top: 150px;
+      left: 150px;
+      width: var(--cli-width);
+      height: 400px;
+      background: rgba(var(--term-bg-rgb, 30, 30, 30), 0.95);
+      z-index: 1600; /* Higher than Safari window */
       overflow: hidden;
+      border-radius: 10px;
+      box-shadow: var(--macos-window-shadow);
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--macos-window-border);
+      transition: top 0.2s ease, left 0.2s ease;
+      max-width: 90vw; /* Ensure CLI doesn't overflow on small screens */
+      max-height: 80vh; /* Ensure CLI doesn't overflow on small screens */
+      /* Default state - visible */
+      transform: scale(1);
+      opacity: 1;
     }
-    #cli-resizer {
-      display: none !important;
+
+    /* Responsive adjustments for CLI sidebar */
+    @media (max-width: 992px) {
+      #cli-sidebar {
+        width: 500px;
+        height: 380px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #cli-sidebar {
+        width: 450px;
+        height: 350px;
+        top: 80px;
+        left: 50%;
+        /* Remove transform from here to avoid conflicts */
+        margin-left: -225px; /* Half of the width for centering */
+      }
+
+      /* No need to override .open class here */
+    }
+
+    @media (max-width: 576px) {
+      #cli-sidebar {
+        width: 95vw;
+        height: 320px;
+        top: 60px;
+        left: 50%;
+        margin-left: -47.5vw; /* Half of the width for centering */
+      }
     }
 
     #cli-sidebar.open {
-      transform: translateX(0);      /* ← slide it back in */
+      transform: scale(1) !important;
+      opacity: 1 !important;
+      display: flex !important;
+      visibility: visible !important;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease !important;
+      pointer-events: auto !important;
+    }
+
+    #cli-sidebar.minimized {
+      transform: scale(0.05) translate(calc(50vw - 150px), calc(100vh - 60px));
+      opacity: 0;
+      transform-origin: bottom center;
+      transition: transform 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045), opacity 0.4s ease;
+    }
+
+
+    /* Resizers for all edges and corners */
+    .cli-resizer {
+      position: absolute;
+      z-index: 1601;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    /* Edge resizers */
+    #cli-resizer-right {
+      top: 38px; /* Below titlebar */
+      right: 0;
+      width: 6px;
+      height: calc(100% - 38px - 6px); /* Full height minus titlebar and corner */
+      cursor: ew-resize;
+    }
+
+    #cli-resizer-bottom {
+      bottom: 0;
+      left: 6px; /* Leave space for corner */
+      width: calc(100% - 12px); /* Full width minus corners */
+      height: 6px;
+      cursor: ns-resize;
+    }
+
+    #cli-resizer-left {
+      top: 38px; /* Below titlebar */
+      left: 0;
+      width: 6px;
+      height: calc(100% - 38px - 6px); /* Full height minus titlebar and corner */
+      cursor: ew-resize;
+    }
+
+    /* Corner resizers */
+    #cli-resizer-bottom-right {
+      bottom: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      cursor: nwse-resize;
+    }
+
+    #cli-resizer-bottom-left {
+      bottom: 0;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      cursor: nesw-resize;
+    }
+
+    /* Show resizers on hover */
+    #cli-sidebar:hover .cli-resizer {
+      opacity: 0.5;
+    }
+
+    /* Style for when the CLI is being dragged */
+    #cli-sidebar.dragging {
+      transition: none;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Style for when the CLI is being resized */
+    #cli-sidebar.resizing {
+      transition: none;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
     }
 
     #cli-sidebar iframe {
       width: 100%;
-      height: 100%;
+      height: calc(100% - 38px);
       border: none;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
 
-    /* make the toggle button smoothly slide */
-    #cli-toggle-btn {
-      transition: left 0.3s ease;
+    /* macOS-style title bar for CLI */
+    #cli-titlebar {
+      height: 38px;
+      background: var(--term-head);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      user-select: none;
+      cursor: grab;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    /* when sidebar is open, push the button right by sidebar width + margin */
-    #cli-toggle-btn.open {
-      left: calc(var(--cli-width) + 1rem);
+    #cli-titlebar:active {
+      cursor: grabbing;
+    }
+
+    .cli-traffic-lights {
+      display: flex;
+      gap: 8px;
+      margin-right: 12px;
+    }
+
+    .cli-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .cli-close {
+      background-color: #ff5f56;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .cli-close:hover {
+      opacity: 0.8;
+    }
+
+    .cli-minimize {
+      background-color: #ffbd2e;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .cli-minimize:hover {
+      opacity: 0.8;
+    }
+
+    .cli-maximize {
+      background-color: #27c93f;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .cli-maximize:hover {
+      opacity: 0.8;
+    }
+
+    .cli-title {
+      color: var(--text-color);
+      font-size: 14px;
+      font-weight: 500;
+      flex-grow: 1;
+      text-align: center;
     }
 
 
-    #cli-toggle-btn {
-    font-size: 1rem;
-    font-weight: 500;
+  /* Terminal icon text style */
+  .terminal-icon-text {
+    width: 100%;
+    height: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  #cli-toggle-btn:hover {
-    color: var(--primary-hover);
+    font-family: monospace;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background-color: #333;
+    border-radius: 12px;
   }
 
-  /* When CLI is open on desktop, shift site content */
+  /* CLI appears as a layer on top of the site */
   @media (min-width: 1024px) {
     body.cli-open #siteContent {
-      margin-left: var(--cli-width);
+      /* No margin-left anymore - CLI floats on top */
       transition: margin-left 0.3s ease;
     }
   }
@@ -1751,10 +2279,8 @@
   [data-theme="dark"] .mobile-nav li a:hover {
     background: var(--primary-color);
   }
-  .mobile-nav label[for="cli-toggle-switch"] {
-    display: none !important;
-  }
 }
+
 
     /* ──────────────────────────────────────────────────────────
    Contact section: show simple card & hide code-editor
@@ -1804,17 +2330,76 @@
 
   </style>
 </head>
-<body class="cli-open">
-<div id="siteContent">
-
-
-    <!-- CLI Sidebar -->
-  <div id="cli-sidebar" class="open">
-    <iframe src="cli.html" title="Portfolio CLI" tabindex="0"></iframe>
-    <!-- drag this to resize -->
-    <div id="cli-resizer"></div>
+<body>
+<!-- macOS Menu Bar -->
+<div class="macos-menubar">
+  <div class="macos-menubar-item"><i class="fas fa-lemon"></i></div>
+  <div class="macos-menubar-item">Files</div>
+  <div class="macos-menubar-item">File</div>
+  <div class="macos-menubar-item">Edit</div>
+  <div class="macos-menubar-item">View</div>
+  <div class="macos-menubar-item">Go</div>
+  <div class="macos-menubar-item">Window</div>
+  <div class="macos-menubar-item">Help</div>
+  <div class="macos-menubar-right">
+    <div id="theme-toggle-mac" aria-label="Toggle dark mode">
+      <i class="fas fa-moon"></i>
+    </div>
+    <div><i class="fas fa-wifi"></i></div>
+    <div><i class="fas fa-battery-three-quarters"></i></div>
+    <div id="mac-clock">12:00 PM</div>
   </div>
+</div>
 
+<!-- macOS Dock -->
+<div class="macos-dock">
+  <div class="dock-item" id="linkedin-icon">
+    <a href="https://www.linkedin.com/in/jason-dank" target="_blank">
+      <div class="linkedin-icon-text" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-family: var(--macos-font); font-size: 24px; font-weight: bold; color: white; background-color: #0077B5; border-radius: 12px;">
+        <i class="fab fa-linkedin-in"></i>
+      </div>
+    </a>
+  </div>
+  <div class="dock-item active" id="github-icon">
+    <a href="https://github.com/jdank417" target="_blank">
+      <div class="github-icon-text" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-family: var(--macos-font); font-size: 24px; font-weight: bold; color: white; background-color: #333; border-radius: 12px;">
+        <i class="fab fa-github"></i>
+      </div>
+    </a>
+  </div>
+  <div class="dock-item" id="email-icon">
+    <a href="mailto:jasondank@yahoo.com" target="_blank">
+      <div class="email-icon-text" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-family: var(--macos-font); font-size: 24px; font-weight: bold; color: white; background-color: #8A2BE2; border-radius: 12px;">
+        <i class="fas fa-envelope"></i>
+      </div>
+    </a>
+  </div>
+  <div class="dock-item" id="terminal-icon">
+    <div class="terminal-icon-text">&gt;_</div>
+  </div>
+</div>
+
+<!-- CLI Sidebar - Separate Window -->
+<div id="cli-sidebar" class="minimized">
+  <!-- macOS-style title bar -->
+  <div id="cli-titlebar">
+    <div class="cli-traffic-lights">
+      <span class="cli-btn cli-close"></span>
+      <span class="cli-btn cli-minimize"></span>
+      <span class="cli-btn cli-maximize"></span>
+    </div>
+    <div class="cli-title">DANKos</div>
+  </div>
+  <iframe src="cli.html" title="Portfolio CLI" tabindex="0"></iframe>
+  <!-- resizers for all edges and corners -->
+  <div id="cli-resizer-right" class="cli-resizer"></div>
+  <div id="cli-resizer-bottom" class="cli-resizer"></div>
+  <div id="cli-resizer-left" class="cli-resizer"></div>
+  <div id="cli-resizer-bottom-right" class="cli-resizer"></div>
+  <div id="cli-resizer-bottom-left" class="cli-resizer"></div>
+</div>
+
+<div id="siteContent">
 
   <!-- HEADER / NAVIGATION -->
   <header id="header">
@@ -1861,49 +2446,13 @@
       <li><a href="#recommendations" class="mobile-link">Recommendations</a></li>
       <li><a href="#certifications" class="mobile-link">Certifications</a></li>
       <li><a href="#contact" class="mobile-link">Contact</a></li>
-      <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-  <label for="cli-toggle-switch" style="
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 1rem;
-    color: var(--primary-color);
-  ">
-    <i class="fas fa-terminal" style="margin-right: 8px;"></i>
-    CLI
-    <input type="checkbox" id="cli-toggle-switch" checked style="display: none;" />
-    <span style="
-      margin-left: 12px;
-      position: relative;
-      width: 42px;
-      height: 22px;
-      background: #ccc;
-      border-radius: 22px;
-      transition: background 0.3s ease;
-      display: inline-block;
-    ">
-      <span id="cli-thumb" style="
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 18px;
-        height: 18px;
-        background: #fff;
-        border-radius: 50%;
-        transition: transform 0.3s ease;
-        transform: translateX(20px);
-      "></span>
-    </span>
-  </label>
-</li>
 
 
     </ul>
     <div class="mobile-nav-socials">
       <a href="https://github.com/jdank417" target="_blank"><i class="fab fa-github"></i></a>
       <a href="https://www.linkedin.com/in/jason-dank" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-      <a href="mailto:jasondank@yahoo.com"><i class="fas fa-envelope"></i></a>
+      <a href="mailto:jasondank@yahoo.com" target="_blank"><i class="fas fa-envelope"></i></a>
     </div>
   </div>
 
@@ -1915,7 +2464,7 @@
     <div class="hero-bg"></div>
     <div class="hero-content">
       <div class="hero-text-container">
-        <h1 class="hero-title" style="margin: 2rem 0 1rem; text-align: left; width: 100%;">Hello World, I'm <span>Jason Dank</span>.</h1>
+        <h1 class="hero-title" style="margin: 0.5rem 0 1rem; text-align: left; width: 100%;">Hello World, I'm <span>Jason Dank</span>.</h1>
         <div id="rotating-text-container" style="margin-bottom: 3.5rem; margin-top: 1.5rem; height: 6.5rem; position: relative; overflow: hidden; text-align: left; width: 100%;"></div>
         <div class="hero-cta" style="align-self: flex-start;">
           <a href="#projects" class="btn btn-primary">
@@ -2487,7 +3036,7 @@ myContact.displayContactInfo();</code></pre>
       <div class="contact-simple">
         <h3>Contact Information</h3>
         <ul>
-          <li><strong>Email:</strong> <a href="mailto:jasondank@yahoo.com">jasondank@yahoo.com</a></li>
+          <li><strong>Email:</strong> <a href="mailto:jasondank@yahoo.com" target="_blank">jasondank@yahoo.com</a></li>
           <li><strong>Location:</strong> Boston, Massachusetts</li>
           <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/jason-dank" target="_blank">linkedin.com/in/jason-dank</a></li>
           <li><strong>GitHub:</strong> <a href="https://github.com/jdank417" target="_blank">github.com/jdank417</a></li>
@@ -2510,7 +3059,7 @@ myContact.displayContactInfo();</code></pre>
             <a href="https://www.linkedin.com/in/jason-dank" target="_blank" class="social-link">
               <i class="fab fa-linkedin-in"></i>
             </a>
-            <a href="mailto:jasondank@yahoo.com" class="social-link">
+            <a href="mailto:jasondank@yahoo.com" target="_blank" class="social-link">
               <i class="fas fa-envelope"></i>
             </a>
             <a href="#" class="social-link">
@@ -2556,6 +3105,110 @@ myContact.displayContactInfo();</code></pre>
   <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Everything below this happens AFTER the DOM is ready
+
+  // Handle anchor links to prevent section tops from being cut off
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      // Only handle anchor links that point to an element on the page
+      const targetId = this.getAttribute('href').substring(1);
+      if (!targetId) return; // Skip empty anchors like href="#"
+
+      e.preventDefault();
+
+      console.log('Clicked anchor link for section:', targetId);
+
+      // First make sure the Safari window is visible
+      const safariWindow = document.querySelector('.safari-window');
+      const safariContent = document.querySelector('.safari-content');
+
+      if (safariWindow && safariContent) {
+        // Make Safari window visible
+        safariWindow.style.display = '';
+        safariWindow.style.transform = 'translateX(-50%)';
+        safariWindow.style.opacity = '1';
+
+        // Update GitHub icon in dock
+        const portfolioIcon = document.getElementById('github-icon');
+        if (portfolioIcon) {
+          portfolioIcon.classList.add('active');
+        }
+
+        // Look for the section within the Safari content
+        const section = safariContent.querySelector('#' + targetId);
+
+        if (section) {
+          console.log('Found section in Safari content:', targetId);
+
+          // Use a small delay to ensure the Safari window is fully visible before scrolling
+          setTimeout(() => {
+            // Use a smaller offset for Safari content (titlebar is 38px)
+            const safariOffset = 40; // Just slightly more than the titlebar height
+            const elementPosition = section.offsetTop;
+            const offsetPosition = elementPosition - safariOffset;
+
+            console.log('Scrolling Safari content to section:', targetId, 'position:', offsetPosition);
+
+            // Scroll the Safari content
+            safariContent.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }, 100); // Small delay to ensure the Safari window is visible
+        } else {
+          console.log('Section not found in Safari content:', targetId);
+
+          // Try to find the section in the main document as fallback
+          const mainSection = document.getElementById(targetId);
+
+          if (mainSection) {
+            console.log('Found section in main document:', targetId);
+
+            // Use a small delay to ensure the Safari window is fully visible before scrolling
+            setTimeout(() => {
+              // Use a larger offset for the main window to account for the header
+              const windowOffset = 80;
+              const elementPosition = mainSection.getBoundingClientRect().top + window.pageYOffset;
+              const offsetPosition = elementPosition - windowOffset;
+
+              console.log('Scrolling main window to section:', targetId, 'position:', offsetPosition);
+
+              // Scroll the main window
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }, 100); // Small delay to ensure the Safari window is visible
+          } else {
+            console.log('Section not found anywhere:', targetId);
+          }
+        }
+      } else {
+        console.log('Safari window or content not found');
+
+        // Fallback to scrolling the main document
+        const mainSection = document.getElementById(targetId);
+
+        if (mainSection) {
+          console.log('Found section in main document:', targetId);
+
+          // Use a larger offset for the main window to account for the header
+          const windowOffset = 80;
+          const elementPosition = mainSection.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = elementPosition - windowOffset;
+
+          console.log('Scrolling main window to section:', targetId, 'position:', offsetPosition);
+
+          // Scroll the main window
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        } else {
+          console.log('Section not found anywhere:', targetId);
+        }
+      }
+    });
+  });
 
   // Code Editor Functionality
   const runCodeBtn = document.getElementById('run-code-btn');
@@ -2643,26 +3296,171 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const themeToggleBtn = document.getElementById('theme-toggle');
+  const themeToggleMac = document.getElementById('theme-toggle-mac');
   const themeIcon = themeToggleBtn?.querySelector('i');
+  const themeIconMac = themeToggleMac?.querySelector('i');
 
   // Theme stuff
   const currentTheme = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', currentTheme);
-  if (themeIcon) updateThemeIcon(currentTheme);
+  if (themeIcon) updateThemeIcon(currentTheme, themeIcon);
+  if (themeIconMac) updateThemeIcon(currentTheme, themeIconMac);
 
-  themeToggleBtn?.addEventListener('click', () => {
+  function updateThemeIcon(theme, icon) {
+    if (!icon) return;
+    icon.classList.toggle('fa-moon', theme === 'light');
+    icon.classList.toggle('fa-sun', theme === 'dark');
+  }
+
+  function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
     const next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
-    updateThemeIcon(next);
-  });
-
-  function updateThemeIcon(theme) {
-    if (!themeIcon) return;
-    themeIcon.classList.toggle('fa-moon', theme === 'light');
-    themeIcon.classList.toggle('fa-sun', theme === 'dark');
+    if (themeIcon) updateThemeIcon(next, themeIcon);
+    if (themeIconMac) updateThemeIcon(next, themeIconMac);
   }
+
+  themeToggleBtn?.addEventListener('click', toggleTheme);
+  themeToggleMac?.addEventListener('click', toggleTheme);
+
+  // Update macOS clock
+  function updateClock() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+    const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
+
+    const clockElement = document.getElementById('mac-clock');
+    if (clockElement) {
+      clockElement.textContent = timeString;
+    }
+  }
+
+  updateClock();
+  setInterval(updateClock, 60000); // Update every minute
+
+  // Safari window controls
+  const safariClose = document.querySelector('.safari-close');
+  const safariMinimize = document.querySelector('.safari-minimize');
+  const safariMaximize = document.querySelector('.safari-maximize');
+  const safariWindow = document.querySelector('.safari-window');
+  const portfolioIcon = document.getElementById('github-icon');
+
+  // Create Safari window elements
+  function createSafariWindow() {
+    // Create Safari window container
+    const safariWindow = document.createElement('div');
+    safariWindow.className = 'safari-window';
+
+    // Create Safari titlebar
+    const safariTitlebar = document.createElement('div');
+    safariTitlebar.className = 'safari-titlebar';
+
+    // Create traffic lights
+    const trafficLights = document.createElement('div');
+    trafficLights.className = 'safari-traffic-lights';
+
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'safari-btn safari-close';
+
+    const minimizeBtn = document.createElement('span');
+    minimizeBtn.className = 'safari-btn safari-minimize';
+
+    const maximizeBtn = document.createElement('span');
+    maximizeBtn.className = 'safari-btn safari-maximize';
+
+    trafficLights.appendChild(closeBtn);
+    trafficLights.appendChild(minimizeBtn);
+    trafficLights.appendChild(maximizeBtn);
+
+    // Create toolbar
+    const toolbar = document.createElement('div');
+    toolbar.className = 'safari-toolbar';
+
+    const navButtons = document.createElement('div');
+    navButtons.className = 'safari-nav-buttons';
+
+    const backBtn = document.createElement('span');
+    backBtn.className = 'safari-nav-btn';
+    backBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+
+    const forwardBtn = document.createElement('span');
+    forwardBtn.className = 'safari-nav-btn';
+    forwardBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+
+    navButtons.appendChild(backBtn);
+    navButtons.appendChild(forwardBtn);
+
+    const addressBar = document.createElement('div');
+    addressBar.className = 'safari-address-bar';
+    addressBar.innerHTML = '<i class="fas fa-lock"></i> jasondank.com';
+
+    toolbar.appendChild(navButtons);
+    toolbar.appendChild(addressBar);
+
+    safariTitlebar.appendChild(trafficLights);
+    safariTitlebar.appendChild(toolbar);
+
+    // Create content container
+    const safariContent = document.createElement('div');
+    safariContent.className = 'safari-content';
+
+    // Add elements to Safari window
+    safariWindow.appendChild(safariTitlebar);
+    safariWindow.appendChild(safariContent);
+
+    // Add Safari window to body
+    document.body.insertBefore(safariWindow, document.body.firstChild);
+
+    // Move site content into Safari window
+    const siteContent = document.getElementById('siteContent');
+
+    // Create a new div for the Safari content
+    const safariContentInner = document.createElement('div');
+    safariContentInner.className = 'safari-content-inner';
+
+    // Move all children of siteContent to safariContentInner
+    while (siteContent.firstChild) {
+      safariContentInner.appendChild(siteContent.firstChild);
+    }
+
+    // Append safariContentInner to safariContent
+    safariContent.appendChild(safariContentInner);
+
+    // Add event listeners for window controls
+    closeBtn.addEventListener('click', () => {
+      safariWindow.style.display = 'none';
+      if (safariIcon) {
+        safariIcon.classList.remove('active');
+      }
+    });
+
+    minimizeBtn.addEventListener('click', () => {
+      safariWindow.style.transform = 'translateY(100vh)';
+      safariWindow.style.opacity = '0';
+      if (safariIcon) {
+        safariIcon.classList.remove('active');
+      }
+    });
+
+    safariIcon?.addEventListener('click', () => {
+      safariWindow.style.display = '';
+      safariWindow.style.transform = 'translateX(-50%)';
+      safariWindow.style.opacity = '1';
+      if (safariIcon) {
+        safariIcon.classList.add('active');
+      }
+    });
+
+    return safariWindow;
+  }
+
+  // Initialize Safari window
+  setTimeout(createSafariWindow, 100);
 
   // Hamburger menu
   const menuToggle = document.getElementById('menu-toggle');
@@ -2682,21 +3480,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // CLI Sidebar
   const sidebar    = document.getElementById('cli-sidebar');
-  const closeBtn   = document.getElementById('cli-close-btn');
-  const cliSwitch  = document.getElementById('cli-toggle-switch');
-  const cliThumb   = document.getElementById('cli-thumb');
+  const closeBtn   = document.querySelector('.cli-close');
+  const terminalIcon = document.getElementById('terminal-icon');
 
-  cliSwitch?.addEventListener('change', () => {
-    const isOpen = cliSwitch.checked;
-    sidebar?.classList.toggle('open', isOpen);
-    document.body.classList.toggle('cli-open', isOpen);
-    cliThumb?.style.setProperty('transform', isOpen ? 'translateX(20px)' : 'translateX(0)');
-  });
+  // Terminal icon in dock click handler is now defined later in the code
 
   closeBtn?.addEventListener('click', () => {
-    sidebar?.classList.remove('open');
-    cliSwitch.checked = false;
-    cliThumb?.style.setProperty('transform', 'translateX(0)');
+    // Minimize to dock - ensure animation works correctly
+    if (sidebar) {
+      // Reset all inline styles first
+      sidebar.style.transition = 'none';
+      sidebar.style.animation = 'none';
+
+      // Force a reflow to ensure style changes take effect
+      void sidebar.offsetWidth;
+
+      // Remove open class and add minimized class
+      sidebar.classList.remove('open');
+      sidebar.classList.add('minimized');
+
+      // After a small delay, restore the transition property
+      setTimeout(() => {
+        sidebar.style.transition = '';
+      }, 50);
+
+      // Update terminal icon in dock
+      if (terminalIcon) {
+        terminalIcon.classList.add('active');
+      }
+    }
   });
 
   // Portfolio fade in
@@ -2747,10 +3559,36 @@ document.addEventListener('DOMContentLoaded', () => {
   // Close CLI by default on mobile (moved from separate DOMContentLoaded listener)
   if (window.innerWidth < 1024) {
     document.body.classList.remove('cli-open');
-    document.getElementById('cli-sidebar')?.classList.remove('open');
-    document.getElementById('cli-toggle-switch').checked = false;
-    document.getElementById('cli-thumb').style.transform = 'translateX(0)';
+    const sidebar = document.getElementById('cli-sidebar');
+
+    if (sidebar) {
+      sidebar.classList.remove('open');
+      sidebar.classList.add('minimized');
+    }
+
+    // Update terminal icon in dock
+    document.getElementById('terminal-icon')?.classList.remove('active');
   }
+
+  // Handle window resize to reposition CLI window
+  window.addEventListener('resize', () => {
+    const sidebar = document.getElementById('cli-sidebar');
+    if (sidebar && !sidebar.classList.contains('minimized')) {
+      // Ensure CLI stays within viewport
+      const maxX = window.innerWidth - sidebar.offsetWidth;
+      const maxY = window.innerHeight - sidebar.offsetHeight;
+
+      let currentX = parseInt(sidebar.style.left) || 0;
+      let currentY = parseInt(sidebar.style.top) || 0;
+
+      // Constrain to viewport
+      currentX = Math.max(0, Math.min(currentX, maxX));
+      currentY = Math.max(0, Math.min(currentY, maxY));
+
+      sidebar.style.left = `${currentX}px`;
+      sidebar.style.top = `${currentY}px`;
+    }
+  });
 
   // Initialize rotating text (moved from separate DOMContentLoaded listener)
   const texts = [
@@ -2813,70 +3651,543 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Listen for CLOSE_CLI message from the iframe
 window.addEventListener('message', e => {
   if (e.data === 'CLOSE_CLI') {
     const sidebar      = document.getElementById('cli-sidebar');
-    const toggleBtn    = document.getElementById('cli-toggle-btn');
-    const cliSwitch    = document.getElementById('cli-toggle-switch');
-    const cliThumb     = document.getElementById('cli-thumb');
+    const terminalIcon = document.getElementById('terminal-icon');
 
-    // Close the sidebar
-    sidebar.classList.remove('open');
-    // Reset the CLI toggle button (☰/✕)
-    toggleBtn.classList.remove('open');
-    // Uncheck the CLI switch in the menu
-    if (cliSwitch) {
-      cliSwitch.checked = false;
+    // Minimize to dock - ensure animation works correctly
+    if (sidebar) {
+      // Reset all inline styles first
+      sidebar.style.transition = 'none';
+      sidebar.style.animation = 'none';
+
+      // Force a reflow to ensure style changes take effect
+      void sidebar.offsetWidth;
+
+      // Remove open class and add minimized class
+      sidebar.classList.remove('open');
+      sidebar.classList.add('minimized');
+
+      // After a small delay, restore the transition property
+      setTimeout(() => {
+        sidebar.style.transition = '';
+      }, 50);
     }
-    // And slide the thumb back
-    if (cliThumb) {
-      cliThumb.style.transform = 'translateX(0)';
+
+    // Update terminal icon in dock
+    if (terminalIcon) {
+      terminalIcon.classList.add('active');
     }
   }
 });
 
-// listen for exit from the iframe
-window.addEventListener('message', e => {
-  if (e.data === 'CLOSE_CLI') {
-    const cliSwitch = document.getElementById('cli-toggle-switch');
-    // un‑check it
-    cliSwitch.checked = false;
-    // fire its change handler so it actually closes the CLI
-    cliSwitch.dispatchEvent(new Event('change'));
+// Initialize resizer functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const cliSidebar = document.getElementById('cli-sidebar');
+  const resizers = {
+    right: document.getElementById('cli-resizer-right'),
+    bottom: document.getElementById('cli-resizer-bottom'),
+    left: document.getElementById('cli-resizer-left'),
+    bottomRight: document.getElementById('cli-resizer-bottom-right'),
+    bottomLeft: document.getElementById('cli-resizer-bottom-left')
+  };
+
+  let isResizing = false;
+  let currentResizer = null;
+  let startX, startY, startWidth, startHeight, startLeft, startTop;
+
+  // Minimum dimensions
+  const minWidth = 300;
+  const minHeight = 200;
+  // Maximum dimensions (with some padding from window edges)
+  const maxWidth = () => window.innerWidth - 20;
+  const maxHeight = () => window.innerHeight - 20;
+
+  // Helper function to initialize resizer
+  const initResizer = (resizer, directions) => {
+    if (!resizer) return;
+
+    resizer.addEventListener('pointerdown', e => {
+      isResizing = true;
+      currentResizer = { element: resizer, directions };
+
+      // Capture pointer to track movement even if cursor leaves the element
+      resizer.setPointerCapture(e.pointerId);
+
+      // Prevent text selection during resize
+      document.body.style.userSelect = 'none';
+
+      // Add resizing class for visual feedback
+      cliSidebar.classList.add('resizing');
+
+      // Store initial dimensions and position
+      const rect = cliSidebar.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = rect.width;
+      startHeight = rect.height;
+      startLeft = rect.left;
+      startTop = rect.top;
+
+      e.stopPropagation(); // Prevent dragging while resizing
+    });
+  };
+
+  // Initialize all resizers if they exist
+  if (cliSidebar) {
+    // Right edge - horizontal resize
+    initResizer(resizers.right, { horizontal: true });
+
+    // Bottom edge - vertical resize
+    initResizer(resizers.bottom, { vertical: true });
+
+    // Left edge - horizontal resize from left
+    initResizer(resizers.left, { horizontal: true, fromLeft: true });
+
+    // Bottom-right corner - both directions
+    initResizer(resizers.bottomRight, { horizontal: true, vertical: true });
+
+    // Bottom-left corner - both directions, from left
+    initResizer(resizers.bottomLeft, { horizontal: true, vertical: true, fromLeft: true });
+
+    // Handle pointer movement for all resizers
+    document.addEventListener('pointermove', e => {
+      if (!isResizing || !currentResizer) return;
+
+      const directions = currentResizer.directions;
+      const rect = cliSidebar.getBoundingClientRect();
+
+      // Calculate deltas
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+
+      // Handle horizontal resizing
+      if (directions.horizontal) {
+        let newWidth;
+        let newLeft = parseInt(cliSidebar.style.left) || startLeft;
+
+        if (directions.fromLeft) {
+          // Resizing from left edge
+          newWidth = Math.max(minWidth, Math.min(startWidth - deltaX, maxWidth()));
+          // Adjust position to maintain right edge position
+          newLeft = startLeft + startWidth - newWidth;
+          // Ensure we don't move beyond the left edge of the screen
+          if (newLeft < 0) {
+            newLeft = 0;
+            newWidth = startLeft + startWidth;
+          }
+          cliSidebar.style.left = `${newLeft}px`;
+        } else {
+          // Resizing from right edge
+          newWidth = Math.max(minWidth, Math.min(startWidth + deltaX, maxWidth()));
+        }
+
+        // Update width
+        cliSidebar.style.width = `${newWidth}px`;
+        document.documentElement.style.setProperty('--cli-width', `${newWidth}px`);
+      }
+
+      // Handle vertical resizing
+      if (directions.vertical) {
+        const newHeight = Math.max(minHeight, Math.min(startHeight + deltaY, maxHeight()));
+        cliSidebar.style.height = `${newHeight}px`;
+      }
+    });
+
+    // Handle pointer up for all resizers
+    document.addEventListener('pointerup', e => {
+      if (!isResizing) return;
+
+      isResizing = false;
+      document.body.style.userSelect = '';
+      cliSidebar.classList.remove('resizing');
+
+      if (currentResizer && currentResizer.element.hasPointerCapture(e.pointerId)) {
+        currentResizer.element.releasePointerCapture(e.pointerId);
+      }
+
+      currentResizer = null;
+    });
   }
-});
-
-// grab the resizer
-const resizer = document.getElementById('cli-resizer');
-let isResizing = false;
-
-resizer.addEventListener('pointerdown', e => {
-  isResizing = true;
-  resizer.setPointerCapture(e.pointerId);
-  document.body.style.userSelect = 'none';
-});
-
-document.addEventListener('pointermove', e => {
-  if (!isResizing) return;
-  const w = Math.max(200, Math.min(e.clientX, window.innerWidth - 100));
-  document.documentElement.style.setProperty('--cli-width', w + 'px');
-});
-
-document.addEventListener('pointerup', e => {
-  if (!isResizing) return;
-  isResizing = false;
-  document.body.style.userSelect = '';
-  resizer.releasePointerCapture(e.pointerId);
 });
 
 // This code has been moved to the main DOMContentLoaded event listener
 
+// Add click handlers for macOS-style window controls and make CLI window draggable
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.querySelector('.cli-close');
+  const minimizeBtn = document.querySelector('.cli-minimize');
+  const maximizeBtn = document.querySelector('.cli-maximize');
+  const terminalIcon = document.getElementById('terminal-icon');
+
+  // Close button
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      const cliSidebar = document.getElementById('cli-sidebar');
+
+      // Minimize to dock - ensure animation works correctly
+      if (cliSidebar) {
+        // Reset all inline styles first
+        cliSidebar.style.transition = 'none';
+        cliSidebar.style.animation = 'none';
+
+        // Force a reflow to ensure style changes take effect
+        void cliSidebar.offsetWidth;
+
+        // Remove open class and add minimized class
+        cliSidebar.classList.remove('open');
+        cliSidebar.classList.add('minimized');
+
+        // After a small delay, restore the transition property
+        setTimeout(() => {
+          cliSidebar.style.transition = '';
+        }, 50);
+
+        // Update terminal icon in dock to show it's active
+        if (terminalIcon) {
+          terminalIcon.classList.add('active');
+        }
+      }
+    });
+  }
+
+  // Minimize button
+  if (minimizeBtn) {
+    minimizeBtn.addEventListener('click', () => {
+      const cliSidebar = document.getElementById('cli-sidebar');
+
+      // Minimize to dock - ensure animation works correctly
+      if (cliSidebar) {
+        // Reset all inline styles first
+        cliSidebar.style.transition = 'none';
+        cliSidebar.style.animation = 'none';
+
+        // Force a reflow to ensure style changes take effect
+        void cliSidebar.offsetWidth;
+
+        // Remove open class and add minimized class
+        cliSidebar.classList.remove('open');
+        cliSidebar.classList.add('minimized');
+
+        // After a small delay, restore the transition property
+        setTimeout(() => {
+          cliSidebar.style.transition = '';
+        }, 50);
+
+        // Update terminal icon in dock to show it's active
+        if (terminalIcon) {
+          terminalIcon.classList.add('active');
+        }
+      }
+    });
+  }
+
+  // Maximize button (toggle fullscreen)
+  if (maximizeBtn) {
+    maximizeBtn.addEventListener('click', () => {
+      const cliSidebar = document.getElementById('cli-sidebar');
+
+      if (cliSidebar) {
+        cliSidebar.classList.toggle('fullscreen');
+
+        if (cliSidebar.classList.contains('fullscreen')) {
+          cliSidebar.style.width = '100vw';
+          cliSidebar.style.height = 'calc(100vh - 24px)';
+          cliSidebar.style.top = '24px';
+          cliSidebar.style.left = '0';
+          cliSidebar.style.borderRadius = '0';
+        } else {
+          cliSidebar.style.width = '';
+          cliSidebar.style.height = '';
+          cliSidebar.style.top = '';
+          cliSidebar.style.left = '';
+          cliSidebar.style.borderRadius = '';
+        }
+      }
+    });
+  }
+
+  // Terminal icon click handler
+  if (terminalIcon) {
+    terminalIcon.addEventListener('click', () => {
+      const cliSidebar = document.getElementById('cli-sidebar');
+
+      if (cliSidebar) {
+        // Check if the terminal is already open
+        if (cliSidebar.classList.contains('open')) {
+          // If open, hide it
+          // Reset all inline styles first
+          cliSidebar.style.transition = 'none';
+          cliSidebar.style.animation = 'none';
+
+          // Force a reflow to ensure style changes take effect
+          void cliSidebar.offsetWidth;
+
+          // Remove open class and add minimized class
+          cliSidebar.classList.remove('open');
+          cliSidebar.classList.add('minimized');
+
+          // After a small delay, restore the transition property
+          setTimeout(() => {
+            cliSidebar.style.transition = '';
+          }, 50);
+
+          // Update terminal icon in dock
+          terminalIcon.classList.add('active');
+        } else {
+          // If not open, show it
+          // First, remove any classes that might be affecting visibility
+          cliSidebar.classList.remove('minimized');
+
+          // Reset ALL inline styles that might be interfering
+          cliSidebar.style.transition = 'none';
+          cliSidebar.style.transform = '';
+          cliSidebar.style.opacity = '';
+          cliSidebar.style.animation = 'none';
+          cliSidebar.style.display = 'flex'; // Ensure it's visible
+
+          // Force a reflow to ensure style changes take effect
+          void cliSidebar.offsetWidth;
+
+          // Now add the open class and restore transition
+          cliSidebar.classList.add('open');
+
+          // After a small delay, restore the transition property
+          setTimeout(() => {
+            cliSidebar.style.transition = '';
+          }, 50);
+
+          // Update terminal icon in dock to show it's active
+          terminalIcon.classList.add('active');
+        }
+      }
+    });
+  }
+
+
+  // Initialize CLI window position
+  const cliSidebar = document.getElementById('cli-sidebar');
+  const cliTab = document.getElementById('cli-tab');
+
+  if (cliSidebar) {
+    // Set initial position to center of screen
+    let initialX = Math.max(20, (window.innerWidth - cliSidebar.offsetWidth) / 2);
+    let initialY = Math.max(20, (window.innerHeight - cliSidebar.offsetHeight) / 3);
+
+    // Adjust position for small screens
+    if (window.innerWidth <= 768) {
+      initialX = Math.max(10, (window.innerWidth - cliSidebar.offsetWidth) / 2);
+      initialY = Math.max(30, window.innerHeight / 4); // Position higher on small screens
+    }
+
+    // Further adjust for very small screens
+    if (window.innerWidth <= 576) {
+      initialX = Math.max(5, (window.innerWidth - cliSidebar.offsetWidth) / 2);
+      initialY = 40; // Fixed position from top for very small screens
+    }
+
+    cliSidebar.style.left = `${initialX}px`;
+    cliSidebar.style.top = `${initialY}px`;
+
+    // Initialize tab visibility based on CLI state
+    if (cliTab) {
+      const isCliOpen = cliSidebar.classList.contains('open');
+      cliTab.classList.toggle('hidden', isCliOpen);
+    }
+  }
+
+  // Make CLI window draggable
+  const titleBar = document.getElementById('cli-titlebar');
+
+  if (titleBar && cliSidebar) {
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    // Prevent dragging when clicking on traffic light buttons
+    const trafficLights = document.querySelector('.cli-traffic-lights');
+    if (trafficLights) {
+      trafficLights.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+      });
+    }
+
+    titleBar.addEventListener('mousedown', (e) => {
+      // Only allow dragging with left mouse button
+      if (e.button !== 0) return;
+
+      isDragging = true;
+
+      // Calculate the offset of the mouse pointer from the top-left corner of the CLI window
+      const rect = cliSidebar.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+
+      // Add a class to indicate dragging state
+      cliSidebar.classList.add('dragging');
+
+      // Prevent text selection during drag
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      // Calculate new position
+      const x = e.clientX - offsetX;
+      const y = e.clientY - offsetY;
+
+      // Apply constraints to keep the window within viewport
+      const maxX = window.innerWidth - cliSidebar.offsetWidth;
+      const maxY = window.innerHeight - cliSidebar.offsetHeight;
+
+      let constrainedX = Math.max(0, Math.min(x, maxX));
+      let constrainedY = Math.max(0, Math.min(y, maxY));
+
+      // Snap to edges functionality
+      const snapThreshold = 20; // pixels from edge to trigger snap
+
+      // Snap to left edge
+      if (constrainedX < snapThreshold) {
+        constrainedX = 0;
+        cliSidebar.classList.add('snapped-left');
+      } else {
+        cliSidebar.classList.remove('snapped-left');
+      }
+
+      // Snap to right edge
+      if (maxX - constrainedX < snapThreshold) {
+        constrainedX = maxX;
+        cliSidebar.classList.add('snapped-right');
+      } else {
+        cliSidebar.classList.remove('snapped-right');
+      }
+
+      // Snap to top edge
+      if (constrainedY < snapThreshold) {
+        constrainedY = 0;
+        cliSidebar.classList.add('snapped-top');
+      } else {
+        cliSidebar.classList.remove('snapped-top');
+      }
+
+      // Snap to bottom edge
+      if (maxY - constrainedY < snapThreshold) {
+        constrainedY = maxY;
+        cliSidebar.classList.add('snapped-bottom');
+      } else {
+        cliSidebar.classList.remove('snapped-bottom');
+      }
+
+      // Update position with visual feedback for snapping
+      cliSidebar.style.left = `${constrainedX}px`;
+      cliSidebar.style.top = `${constrainedY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        cliSidebar.classList.remove('dragging');
+      }
+    });
+  }
+});
+
 // Scroll handler from CLI
 window.addEventListener('message', event => {
   if (event.data?.type === 'SCROLL_TO_SECTION') {
-    const section = document.getElementById(event.data.id);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
+    console.log('Received SCROLL_TO_SECTION message for section:', event.data.id);
+
+    // First make sure the Safari window is visible
+    const safariWindow = document.querySelector('.safari-window');
+    const safariContent = document.querySelector('.safari-content');
+
+    if (safariWindow && safariContent) {
+      // Make Safari window visible
+      safariWindow.style.display = '';
+      safariWindow.style.transform = 'translateX(-50%)';
+      safariWindow.style.opacity = '1';
+
+      // Update GitHub icon in dock
+      const portfolioIcon = document.getElementById('github-icon');
+      if (portfolioIcon) {
+        portfolioIcon.classList.add('active');
+      }
+
+      // Look for the section within the Safari content
+      const section = safariContent.querySelector('#' + event.data.id);
+
+      if (section) {
+        console.log('Found section in Safari content:', event.data.id);
+
+        // Use a small delay to ensure the Safari window is fully visible before scrolling
+        setTimeout(() => {
+          // Use a smaller offset for Safari content (titlebar is 38px)
+          const safariOffset = 40; // Just slightly more than the titlebar height
+          const elementPosition = section.offsetTop;
+          const offsetPosition = elementPosition - safariOffset;
+
+          console.log('Scrolling Safari content to section:', event.data.id, 'position:', offsetPosition);
+
+          // Scroll the Safari content
+          safariContent.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }, 100); // Small delay to ensure the Safari window is visible
+      } else {
+        console.log('Section not found in Safari content:', event.data.id);
+
+        // Try to find the section in the main document as fallback
+        const mainSection = document.getElementById(event.data.id);
+
+        if (mainSection) {
+          console.log('Found section in main document:', event.data.id);
+
+          // Use a small delay to ensure the Safari window is fully visible before scrolling
+          setTimeout(() => {
+            // Use a larger offset for the main window to account for the header
+            const windowOffset = 80;
+            const elementPosition = mainSection.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - windowOffset;
+
+            console.log('Scrolling main window to section:', event.data.id, 'position:', offsetPosition);
+
+            // Scroll the main window
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }, 100); // Small delay to ensure the Safari window is visible
+        } else {
+          console.log('Section not found anywhere:', event.data.id);
+        }
+      }
+    } else {
+      console.log('Safari window or content not found');
+
+      // Fallback to scrolling the main document
+      const mainSection = document.getElementById(event.data.id);
+
+      if (mainSection) {
+        console.log('Found section in main document:', event.data.id);
+
+        // Use a larger offset for the main window to account for the header
+        const windowOffset = 80;
+        const elementPosition = mainSection.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - windowOffset;
+
+        console.log('Scrolling main window to section:', event.data.id, 'position:', offsetPosition);
+
+        // Scroll the main window
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      } else {
+        console.log('Section not found anywhere:', event.data.id);
+      }
     }
   }
 });
