@@ -542,7 +542,7 @@
       z-index: 1100;
       display: flex;
       flex-direction: column;
-      padding: 2rem;
+      padding: 1.5rem;
       overflow-y: auto; /* Enable scrolling for the entire menu */
     }
     .mobile-nav.active {
@@ -552,13 +552,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       position: sticky;
       top: 0;
       background: var(--background-color);
       z-index: 2; /* Higher than socials */
-      padding-bottom: 10px;
-      padding-top: 5px;
+      padding-bottom: 8px;
+      padding-top: 3px;
     }
     .mobile-nav-close {
       background: none;
@@ -569,19 +569,19 @@
     }
     .mobile-nav ul {
       list-style: none;
-      margin-top: 1rem;
+      margin-top: 0.75rem;
       overflow-y: auto; /* Enable scrolling for the list */
-      max-height: calc(100vh - 200px); /* Allow space for header and socials */
+      max-height: calc(100vh - 160px); /* Reduced space for header and socials */
       padding-right: 10px; /* Add padding for scrollbar */
     }
     .mobile-nav li {
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.8rem;
     }
     .mobile-nav li a {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 500;
       display: block;
-      padding: 0.5rem 0;
+      padding: 0.3rem 0;
       transition: var(--transition);
     }
     .mobile-nav li a:hover {
@@ -589,18 +589,18 @@
       transform: translateX(5px);
     }
     .mobile-nav-socials {
-      margin-top: 1rem; /* Fixed margin instead of auto to prevent layout issues */
+      margin-top: 0.75rem; /* Reduced margin to save space */
       display: flex;
-      gap: 1rem;
-      padding-bottom: 10px; /* Add padding at the bottom */
+      gap: 0.75rem;
+      padding-bottom: 8px; /* Reduced padding at the bottom */
       position: sticky; /* Keep it visible when scrolling */
       bottom: 0;
       background: var(--background-color); /* Match the menu background */
       z-index: 1; /* Ensure it's above the content when sticky */
     }
     .mobile-nav-socials a {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: var(--light-gray);
       display: flex;
@@ -1795,18 +1795,34 @@
         width: 100%;
       }
 
-      /* Improve mobile navigation for very small screens */
+      /* Improve mobile navigation for small screens */
       .mobile-nav {
-        padding: 1rem;
+        padding: 0.75rem;
+        width: 260px; /* Slightly narrower for small screens */
       }
       .mobile-nav ul {
-        max-height: calc(100vh - 150px); /* Adjust for smaller header and socials */
+        max-height: calc(100vh - 120px); /* Further reduce space for header and socials */
+        margin-top: 0.5rem;
       }
       .mobile-nav li {
-        margin-bottom: 0.8rem; /* Reduce spacing between items */
+        margin-bottom: 0.5rem; /* Further reduce spacing between items */
+      }
+      .mobile-nav li a {
+        font-size: 1rem; /* Smaller font size */
+        padding: 0.25rem 0;
       }
       .mobile-nav-header {
-        margin-bottom: 0.5rem; /* Reduce spacing */
+        margin-bottom: 0.4rem; /* Further reduce spacing */
+        padding-bottom: 5px;
+      }
+      .mobile-nav-socials {
+        margin-top: 0.5rem;
+        gap: 0.5rem;
+        padding-bottom: 5px;
+      }
+      .mobile-nav-socials a {
+        width: 32px;
+        height: 32px;
       }
 
       /* Further improve menu bar scaling for very small screens */
@@ -1838,6 +1854,39 @@
         width: 40px;
         height: 40px;
         margin: 0 3px;
+      }
+    }
+
+    /* Additional optimizations for very small screens */
+    @media (max-width: 480px) {
+      /* Further improve mobile navigation for very small screens */
+      .mobile-nav {
+        padding: 0.5rem;
+        width: 240px; /* Even narrower for very small screens */
+      }
+      .mobile-nav ul {
+        max-height: calc(100vh - 100px); /* Maximize space for the menu items */
+        margin-top: 0.4rem;
+      }
+      .mobile-nav li {
+        margin-bottom: 0.4rem; /* Minimal spacing between items */
+      }
+      .mobile-nav li a {
+        font-size: 0.95rem; /* Even smaller font size */
+        padding: 0.2rem 0;
+      }
+      .mobile-nav-header {
+        margin-bottom: 0.3rem;
+        padding-bottom: 3px;
+      }
+      .mobile-nav-socials {
+        margin-top: 0.4rem;
+        gap: 0.4rem;
+        padding-bottom: 3px;
+      }
+      .mobile-nav-socials a {
+        width: 28px;
+        height: 28px;
       }
     }
     /* === Side‑menu fixes === */
